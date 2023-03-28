@@ -1,25 +1,37 @@
 import React from 'react';
-import logo from './logo.svg';
+
 import './App.css';
+import logo from './logo.png';
+import  background  from './background.png'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <body>
+
+      <div className='container' >
+        
+
+        <div className=' left-column'>
+         
+         
+          <div className='background' style={{backgroundImage: `url(${background})`} } />
+          <img src={logo} style={{position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)"}}/>
+          
+         
+         
+        </div>
+      <div className='right-column'>
+      
+        <button> Already member? </button>
+        <input type="email" id='email' name="email" placeholder='Email address' />
+        <input type="password" id="password "name="password" placeholder='Password' />
+        <input type="password" id="password" name="password" placeholder='Confirm Password'/>
+        <button type="submit" >Sign Up</button>
+        </div>
+    </div>     
+      
+    </body>
+    
   );
 }
 
