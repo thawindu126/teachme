@@ -7,14 +7,32 @@ export interface ButtonProps
     ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
   > {
+  secondary?: boolean;
   loading?: boolean;
+  className?: string;
+  sizeClassName?: string;
 }
 
-export function Button(props: ButtonProps) {
+export function Button({
+  children,
+  secondary = false,
+  loading = false,
+  className,
+  sizeClassName = 'text-base',
+}: ButtonProps) {
   return (
-    <div className={classNames(styles['container'])}>
-      <button>{props.children}</button>
-    </div>
+    <button
+      className={classNames(
+        styles['container'],
+        !secondary
+          ? 'text-white bg-primary-500 rounded-[62px] px-16 py-2.5'
+          : 'text-primary-500',
+        className,
+        sizeClassName
+      )}
+    >
+      {children}
+    </button>
   );
 }
 

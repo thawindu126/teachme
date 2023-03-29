@@ -15,6 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@teachme/types/constants": ["types/src/constants.ts"],
+      "@teachme/types/interfaces": ["types/src/interfaces.ts"],
       "@teachme/ui": ["ui/src/index.ts"]
     }
   },

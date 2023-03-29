@@ -7,7 +7,7 @@ export interface SignUpProps {}
 export function SignUp(props: SignUpProps) {
   return (
     <div className={styles['container']}>
-      <h1>Welcome to SignUp!</h1>
+      <h1 className="">Welcome to SignUp!</h1>
       <Link to="/login">Already a member</Link>
     </div>
   );

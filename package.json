@@ -9,7 +9,11 @@
   },
   "private": true,
   "dependencies": {
+    "@floating-ui/react-dom-interactions": "^0.13.3",
+    "@headlessui/react": "^1.7.13",
+    "@heroicons/react": "^2.0.16",
     "@simondotm/nx-firebase": "^1.0.0",
+    "@splidejs/react-splide": "^0.7.12",
     "axios": "^1.0.0",
     "classnames": "^2.3.2",
     "firebase": "^9.14.0",
@@ -17,6 +21,7 @@
     "firebase-functions": "^4.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-merge-refs": "^2.0.1",
     "react-router-dom": "^6.9.0",
     "tslib": "^2.3.0"
   },
@@ -72,6 +77,7 @@
     "vite": "^4.0.1",
     "vite-plugin-dts": "~1.7.1",
     "vite-plugin-eslint": "^1.8.1",
+    "vite-plugin-svgr": "^2.4.0",
     "vite-tsconfig-paths": "^4.0.2",
     "vitest": "^0.25.8"
   }

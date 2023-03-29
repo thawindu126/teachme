@@ -10,7 +10,7 @@
           "error",
           {
             "enforceBuildableLibDependency": true,
-            "allow": [],
+            "allow": ["@teachme/types", "@teachme/ui"],
             "depConstraints": [
               {
                 "sourceTag": "*",
