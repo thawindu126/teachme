@@ -1,19 +1,20 @@
-import styles from './landing-page.module.css';
-import HomePageScreenshot from '../../assets/home-page-screenshot.png';
-import NewSessionScreenshot from '../../assets/new-session-screenshot.png';
-import CurrentSessionScreenshot from '../../assets/current-session-screenshot.png';
-import SessionSummaryScreenshot from '../../assets/session-summary-screenshot.png';
-import SessionRecordsScreenshot from '../../assets/session-records-screenshot.png';
-import AchievementsScreenshot from '../../assets/achievements-screenshot.png';
-import SubscriptionPlansScreenshot from '../../assets/subscription-plans-screenshot.png';
-import { ReactComponent as PhoneIcon } from '../../assets/phone.svg';
-import { ReactComponent as MailIcon } from '../../assets/mail.svg';
-import { ReactComponent as InstagramIcon } from '../../assets/instagram.svg';
-import { ReactComponent as FacebookIcon } from '../../assets/facebook.svg';
-import { CarouselImage, Carousel, Button, Layout } from '@teachme/ui';
-import { Link } from 'react-router-dom';
+import { Button, Carousel, CarouselImage, Layout } from '@teachme/ui';
 import { Path, SOCIALS } from '@teachme/types/constants';
+
+import AchievementsScreenshot from '../../assets/achievements-screenshot.png';
 import BackgroundPattern from '../../assets/background-pattern.png';
+import CurrentSessionScreenshot from '../../assets/current-session-screenshot.png';
+import { ReactComponent as FacebookIcon } from '../../assets/facebook.svg';
+import HomePageScreenshot from '../../assets/home-page-screenshot.png';
+import { ReactComponent as InstagramIcon } from '../../assets/instagram.svg';
+import { Link } from 'react-router-dom';
+import { ReactComponent as MailIcon } from '../../assets/mail.svg';
+import NewSessionScreenshot from '../../assets/new-session-screenshot.png';
+import { ReactComponent as PhoneIcon } from '../../assets/phone.svg';
+import SessionRecordsScreenshot from '../../assets/session-records-screenshot.png';
+import SessionSummaryScreenshot from '../../assets/session-summary-screenshot.png';
+import SubscriptionPlansScreenshot from '../../assets/subscription-plans-screenshot.png';
+import styles from './landing-page.module.css';
 
 const SCREENSHOTS: CarouselImage[] = [
   {
@@ -55,7 +56,7 @@ export interface LandingPageProps {}
 
 export function LandingPage(props: LandingPageProps) {
   return (
-    <Layout className={styles['container']} landingPage>
+    <Layout landingPage>
       <div className="relative flex flex-wrap text-dark overflow-auto lg:overflow-hidden">
         <div className="w-full lg:w-1/2 h-[calc(100vh-4rem)] flex justify-center items-center text-white px-16 py-8">
           <div

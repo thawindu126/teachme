@@ -1,9 +1,10 @@
 import { Routes as ROUTES, Route } from 'react-router-dom';
-import { Path } from '@teachme/types/constants';
+
 import LandingPage from '../pages/landing-page/landing-page';
 import Login from '../pages/login/login';
-import SignUp from '../pages/sign-up/sign-up';
 import Onboarding from '../pages/onboarding/onboarding';
+import { Path } from '@teachme/types/constants';
+import SignUp from '../pages/sign-up/sign-up';
 
 export function Routes() {
   return (
