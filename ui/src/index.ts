@@ -1,3 +1,4 @@
+export * from './lib/input/input';
 export * from './lib/tooltip/tooltip';
 export * from './lib/carousel/carousel';
 export * from './lib/layout/layout';
