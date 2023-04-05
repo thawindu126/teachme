@@ -1,9 +1,10 @@
-import Input from './input';
 import { render } from '@testing-library/react';
 
-describe('Input', () => {
+import Homepage from './homepage';
+
+describe('Homepage', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Input />);
+    const { baseElement } = render(<Homepage />);
     expect(baseElement).toBeTruthy();
   });
 });

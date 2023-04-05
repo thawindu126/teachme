@@ -5,6 +5,8 @@ export enum Path {
   SIGN_UP = '/signup',
   ONBOARDING = '/onboarding',
 
+  ONBOARDING = '/onboarding',
+
   HOME = '/dashboard',
 
   SESSION_CREATE = '/session/create',

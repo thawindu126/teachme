@@ -1,0 +1,42 @@
+.background {
+    display: grid;
+    grid-template-columns: 5fr 4fr;
+}
+
+.left {
+    grid-column: 1 / 2;
+    display: grid;
+    grid-template-rows: 12rem 1fr 6rem;
+}
+.top-section {
+    box-sizing: border-box;
+    border: black 1px solid;
+    padding: 2rem 5rem;
+}
+.profile-info {
+    border: black 1px solid;
+    height: 2rem;
+}
+
+.mic {
+    height: 16rem;
+}
+.quote {
+    border: black 1px solid;
+}
+.right {
+    grid-column: 2 / 3;
+    border: black 1px solid;
+}
+
+@media screen and (max-width: 769px){
+    .background {
+        grid-template-columns: 1fr;
+    }
+    .left {
+        grid-column: 1 / 2;
+    }
+    .right {
+        grid-column: 1 / 2;
+    }
+}
