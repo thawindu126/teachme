@@ -113,7 +113,7 @@ export function SignUp() {
             <Link to="/onboarding" className={classNames('self-end text-3xl')}>
               <Button
                 type="submit"
-                className={classNames(styles['signup-bitton'])}
+                className={classNames(styles['signup-button'])}
               >
                 Sign Up
               </Button>

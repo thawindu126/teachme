@@ -1,5 +1,6 @@
 import { Routes as ROUTES, Route } from 'react-router-dom';
 
+import Homepage from '../pages/homepage/homepage';
 import LandingPage from '../pages/landing-page/landing-page';
 import Login from '../pages/login/login';
 import Onboarding from '../pages/onboarding/onboarding';
@@ -13,6 +14,7 @@ export function Routes() {
       <Route path={Path.LOGIN} element={<Login />}></Route>
       <Route path={Path.SIGN_UP} element={<SignUp />}></Route>
       <Route path={Path.ONBOARDING} element={<Onboarding />}></Route>
+      <Route path={Path.HOME} element={<Homepage />}></Route>
     </ROUTES>
   );
 }

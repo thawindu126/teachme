@@ -1,6 +1,6 @@
 .background {
     display: grid;
-    grid-template-columns: 5fr 4fr;
+    grid-template-columns: 4fr 4fr;
 }
 
 .left {
@@ -10,20 +10,50 @@
 }
 .top-section {
     box-sizing: border-box;
-    border: black 1px solid;
+    /*border: black 1px solid;*/
     padding: 2rem 5rem;
 }
 .profile-info {
-    border: black 1px solid;
-    height: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 0 6px 0 rgba(43, 42, 42, 30%);
 }
-
+.profile-pic {
+    width: 4.5rem;
+    height: 4.5rem;
+}
+.name {
+    font-size: 1.6rem;
+    font-weight: 500;
+    letter-spacing: 0.05rem;
+}
+.profile-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.03rem;
+}
+.achievement-badge {
+    width: 3.8rem;
+    height: 3.8rem;
+}
 .mic {
     height: 16rem;
+    border-radius: 50%;
+    box-shadow: 0 0 6px 0 rgba(43, 42, 42, 30%);
+}
+.start-session-text {
+    font-size: 1.3rem;
+    letter-spacing: 0.2rem;
+    margin-top: 0.8rem;
 }
 .quote {
-    border: black 1px solid;
+    border-radius: 0 3rem 0 0;
+    box-shadow: 0 0 6px 0 rgba(43, 42, 42, 30%);
+    padding: 1rem 7rem;
 }
+.quote-text {
+    font-size: 1.5rem;
+}
+
 .right {
     grid-column: 2 / 3;
     border: black 1px solid;
