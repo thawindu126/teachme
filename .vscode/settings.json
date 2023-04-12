@@ -1,4 +1,4 @@
 {
-  "typescript.preferences.importModuleSpecifier": "relative",
-  "svg.preview.background": "dark-transparent"
+  "cSpell.enableFiletypes": ["prisma"],
+  "cSpell.words": ["Authed", "TEACHME"]
 }
