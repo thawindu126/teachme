@@ -1,0 +1,82 @@
+.background{
+    background-size: cover;
+    height: 100vh; 
+    background-position: center; 
+    background-attachment: fixed;
+    margin: 0;
+    font-family: "poppins", sans-serif;
+}
+
+.priceText{
+    color: rgb(107, 107, 107); 
+    font-size: 14px; 
+    margin-top: -13px
+}
+.button{
+    display: flex; 
+    justify-content: center; 
+    margin-bottom: 50px;
+}
+.button-inside{
+    padding: 5px 40px;
+}
+.back-button{
+    position: absolute;
+    top: 90px;
+    left: 110px;
+    height: 20px;
+
+}
+
+.container{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    top: 40px;
+    left: 50px;
+    padding: 0 50px 0 50px;
+}
+
+.card{
+    position: relative;
+    height: 73%;
+    width: 25%;
+    margin: 30px;
+    margin-bottom: 45px;
+    border-radius: 30px;
+    box-shadow: 1px 1px 11px 3px rgba(0, 0, 0, 0.3);
+}
+.top-half{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    height: 30%;
+    width: 100%;
+    background: rgba(138, 9, 9, 0.24);
+    border-radius: 30px 30px 0 0;
+}
+.text-inside{
+    font-size: 2.5rem;
+    color: white;
+}
+.bottom-half{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    bottom: 0;
+    width: 100%;
+    height: 70%;
+    border-radius: 0 0 30px 30px;
+    background: rgba(255, 255, 255, 0.9);
+}
+.sessions-remaining{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
