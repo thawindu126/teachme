@@ -1,4 +1,5 @@
 import { Button, Layout } from '../../../ui/src';
+import { avatarArray, recordsPlaceholder } from './placeholder.module';
 
 import { Link } from 'react-router-dom';
 import { Path } from '@teachme/types/constants';
@@ -15,12 +16,21 @@ import userIcon from '../../assets/homepage-assets/Profile-Picture-Group.png';
 
 /* eslint-disable-next-line */
 export interface HomepageProps {}
+interface records {
+  title: string;
+  date: string;
+  points: number;
+  score: string;
+  avatar: number;
+}
 
 export function Homepage(props: HomepageProps) {
   const [name, setName] = useState<string>('Jane Doe');
   const [points, setPoints] = useState<number>(799002);
+  const [pastRecords, setPastRecords] = useState<records[]>(recordsPlaceholder);
+
   return (
-    <Layout className={styles['container']}>
+    <Layout className={classNames(styles['container'])}>
       <div
         className={classNames(
           styles['background'],
@@ -38,7 +48,7 @@ export function Homepage(props: HomepageProps) {
             <div
               className={classNames(
                 styles['profile-info'],
-                'flex justify-around items-center h-min w-full bg-white py-3'
+                'flex justify-around items-center h-min w-full bg-white'
               )}
             >
               <img
@@ -109,7 +119,54 @@ export function Homepage(props: HomepageProps) {
             </span>
           </section>
         </div>
-        <div className={classNames(styles['right'])}></div>
+        <div
+          className={classNames(
+            styles['right'],
+            'flex justify-center items-center'
+          )}
+        >
+          <section
+            className={classNames(styles['session-records'], 'bg-white')}
+          >
+            <div className={classNames(styles['session-record-title'])}>
+              Session Records
+            </div>
+            <hr className={classNames(styles['hr'], 'bg-red-500')}></hr>
+            {pastRecords.map((record, index) => {
+              console.log(avatarArray[index]);
+              return (
+                <div
+                  key={index}
+                  className={classNames(styles['record'], 'bg-white')}
+                >
+                  <section className={classNames(styles['first'])}>
+                    <span>
+                      Title:<span>{record.title}</span>
+                    </span>
+                    <span>
+                      Points:<span>{record.points}</span>
+                    </span>
+                    <span className={classNames(styles['date'])}>
+                      Date:<span>{record.date}</span>
+                    </span>
+                  </section>
+                  <section
+                    className={classNames(
+                      styles['second'],
+                      'text-red-500 font-semibold'
+                    )}
+                  >
+                    <span>{record.score}/100</span>
+                  </section>
+                  <section className={classNames(styles['third'])}>
+                    <img src={avatarArray[record.avatar]}></img>
+                  </section>
+                </div>
+              );
+            })}
+            <div></div>
+          </section>
+        </div>
       </div>
     </Layout>
   );
