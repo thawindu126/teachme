@@ -36,7 +36,7 @@ interface TooltipProps {
   theme?: TooltipTheme;
 }
 
-export function Tooltip({
+export default function Tooltip({
   children,
   content,
   placement,
@@ -100,5 +100,3 @@ export function Tooltip({
     </>
   );
 }
-
-export default Tooltip;

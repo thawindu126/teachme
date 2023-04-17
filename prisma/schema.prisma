@@ -78,17 +78,60 @@ model User {
     avatar                       String?
     highestEducationalExperience HighestEducationalExperience?
     interestedTopics             String[]                      @default([])
+    points                       Int                           @default(0)
+    activeSessionRecordId        String?                       @db.ObjectId
     identityProvider             IdentityProvider              @default(TEACHME)
     identityProviderId           String?
     createdAt                    DateTime                      @default(now())
     updatedAt                    DateTime                      @updatedAt
     accounts                     Account[]
     sessions                     Session[]
+    sessionRecords               SessionRecord[]
 
     @@map(name: "users")
 }
 
+type SessionRecordQuestion {
+    id      String @map("_id") @db.ObjectId
+    payload String
+}
+
+enum SessionRecordAnswerGrade {
+    A
+    B
+    C
+    D
+    F
+}
+
+type SessionRecordAnswer {
+    id         String                   @map("_id") @db.ObjectId
+    questionId String                   @db.ObjectId
+    payload    String
+    score      Int
+    review     String
+    grade      SessionRecordAnswerGrade
+}
+
+enum SessionRecordStatus {
+    PENDING
+    STARTED
+    FINISHED
+}
+
 model SessionRecord {
-    id    String  @id @default(auto()) @map("_id") @db.ObjectId
-    topic String?
+    id                   String                  @id @default(auto()) @map("_id") @db.ObjectId
+    userId               String                  @db.ObjectId
+    status               SessionRecordStatus     @default(PENDING)
+    topic                String?
+    score                Int?
+    currentQuestionIndex Int?
+    createdAt            DateTime                @default(now())
+    updatedAt            DateTime                @updatedAt
+    questions            SessionRecordQuestion[]
+    answers              SessionRecordAnswer[]
+
+    user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@map("sessionRecords")
 }

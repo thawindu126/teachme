@@ -1,7 +1,9 @@
 import { z } from "zod";
 import { authRouter } from "~/server/api/routers/auth";
 import { profileRouter } from "~/server/api/routers/profile";
+import { sessionRecordsRouter } from "~/server/api/routers/session-records";
 import { createTRPCRouter, mergeRouters, protectedProcedure } from "~/server/api/trpc";
+import { getLevel, getPointsToNextLevel } from "~/server/lib/user-level";
 
 const loggedInViewerRouter = createTRPCRouter({
   me: protectedProcedure
@@ -19,7 +21,10 @@ const loggedInViewerRouter = createTRPCRouter({
     )
     .query(({ input, ctx }) => {
       const { select } = input ?? {};
-      const { highestEducationalExperience, interestedTopics, ...user } = ctx.user;
+      const { highestEducationalExperience, interestedTopics, points, ...user } = ctx.user;
+
+      const level = getLevel(points);
+      const pointsToNextLevel = getPointsToNextLevel(points, level);
 
       return {
         ...user,
@@ -27,6 +32,9 @@ const loggedInViewerRouter = createTRPCRouter({
           highestEducationalExperience,
         }),
         ...(select?.interestedTopics && { interestedTopics }),
+        points,
+        level,
+        pointsToNextLevel,
       };
     }),
 });
@@ -42,6 +50,7 @@ export const appRouter = mergeRouters(
     loggedInViewerRouter,
     auth: authRouter,
     profile: profileRouter,
+    sessionRecords: sessionRecordsRouter,
   })
 );
 

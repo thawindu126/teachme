@@ -1,7 +1,7 @@
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useCallback, useState, type ChangeEvent, type FormEventHandler } from "react";
-import GoogleAuthButton from "~/components/GoogleAuthButton/GoogleAuthButton";
+import { GoogleAuthButton } from "~/components";
 import { Button, Checkbox, Input } from "~/components/ui";
 
 interface LoginFormProps {
@@ -86,7 +86,7 @@ export default function LoginForm({ isGoogleLoginEnabled }: LoginFormProps) {
           type="submit"
           size="lg"
           className="self-end"
-          onClick={() => void signIn("email_password", { email, password })}>
+          onClick={() => void signIn("credentials", { email, password })}>
           Login
         </Button>
         <Link href="/forgot-password" className="self-end hover:underline">

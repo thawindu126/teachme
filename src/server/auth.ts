@@ -31,75 +31,75 @@ export const AUTH_OPTIONS: AuthOptions = {
     verifyRequest: "/verify",
   },
   callbacks: {
-    async jwt({ token, user, account }) {
-      const autoMergeIdentities = async () => {
-        const existingUser = await prisma.user.findFirst({
-          where: { email: token.email! },
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        });
+    // async jwt({ token, user, account }) {
+    //   const autoMergeIdentities = async () => {
+    //     const existingUser = await prisma.user.findFirst({
+    //       where: { email: token.email! },
+    //       select: {
+    //         id: true,
+    //         name: true,
+    //         email: true,
+    //       },
+    //     });
 
-        if (!existingUser) {
-          return token;
-        }
+    //     if (!existingUser) {
+    //       return token;
+    //     }
 
-        return {
-          ...existingUser,
-          ...token,
-        };
-      };
-      if (!user) {
-        return await autoMergeIdentities();
-      }
-      if (!account) {
-        return token;
-      }
-      if (account.type === "credentials") {
-        return {
-          ...token,
-          id: user.id,
-          name: user.name,
-          email: user.email,
-        };
-      }
+    //     return {
+    //       ...existingUser,
+    //       ...token,
+    //     };
+    //   };
+    //   if (!user) {
+    //     return await autoMergeIdentities();
+    //   }
+    //   if (!account) {
+    //     return token;
+    //   }
+    //   if (account.type === "credentials") {
+    //     return {
+    //       ...token,
+    //       id: user.id,
+    //       name: user.name,
+    //       email: user.email,
+    //     };
+    //   }
 
-      // The arguments above are from the provider so we need to look up the
-      // user based on those values in order to construct a JWT.
-      if (account.type === "oauth") {
-        if (!account.provider || !account.providerAccountId) {
-          return token;
-        }
+    //   // The arguments above are from the provider so we need to look up the
+    //   // user based on those values in order to construct a JWT.
+    //   if (account.type === "oauth") {
+    //     if (!account.provider || !account.providerAccountId) {
+    //       return token;
+    //     }
 
-        const existingUser = await prisma.user.findFirst({
-          where: {
-            AND: [
-              {
-                identityProvider: IdentityProvider.GOOGLE,
-              },
-              {
-                identityProviderId: account.providerAccountId,
-              },
-            ],
-          },
-        });
+    //     const existingUser = await prisma.user.findFirst({
+    //       where: {
+    //         AND: [
+    //           {
+    //             identityProvider: IdentityProvider.GOOGLE,
+    //           },
+    //           {
+    //             identityProviderId: account.providerAccountId,
+    //           },
+    //         ],
+    //       },
+    //     });
 
-        if (!existingUser) {
-          return await autoMergeIdentities();
-        }
+    //     if (!existingUser) {
+    //       return await autoMergeIdentities();
+    //     }
 
-        return {
-          ...token,
-          id: existingUser.id,
-          name: existingUser.name,
-          email: existingUser.email,
-        };
-      }
+    //     return {
+    //       ...token,
+    //       id: existingUser.id,
+    //       name: existingUser.name,
+    //       email: existingUser.email,
+    //     };
+    //   }
 
-      return token;
-    },
+    //   return token;
+    // },
     session({ session, token }) {
       return {
         ...session,

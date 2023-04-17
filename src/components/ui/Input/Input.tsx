@@ -6,7 +6,7 @@ import { classNames } from "~/lib/classNames";
 import styles from "./Input.module.scss";
 
 const inputVariants = cva(
-  "border-none bg-white text-base transition-colors [border-bottom-style:solid] [border-bottom-width:1px] focus:shadow-none",
+  "border-none bg-white text-base transition-colors [border-bottom-style:solid] focus:shadow-none",
   {
     variants: {
       variant: {

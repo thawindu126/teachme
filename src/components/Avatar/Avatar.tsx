@@ -1,23 +1,18 @@
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
-import * as Tooltip from "@radix-ui/react-tooltip";
 import type { Maybe } from "@trpc/server";
-import Image from "next/image";
-import Link from "next/link";
-import { FiCheck } from "react-icons/fi";
 import { classNames } from "~/lib/classNames";
-import { defaultAvatarSrc } from "~/lib/defaultAvatarImage";
+import { UserLevel } from "~/server/lib/user-level";
 
 export type AvatarProps = {
-  className?: string;
   size: "xs" | "sm" | "md" | "mdLg" | "lg" | "xl";
+  className?: string;
   imageSrc?: Maybe<string>;
-  title?: string;
   alt: string;
-  href?: string;
-  gravatarFallbackMd5?: string;
-  fallback?: React.ReactNode;
-  accepted?: boolean;
-  asChild?: boolean; // Added to ignore the outer span on the fallback component - messes up styling
+  levelDetails?: {
+    points: number;
+    level: UserLevel;
+    pointsToNextLevel: number;
+  };
 };
 
 const sizesPropsBySize = {
@@ -29,60 +24,49 @@ const sizesPropsBySize = {
   xl: "w-24 h-24", // 96px
 } as const;
 
-export default function Avatar(props: AvatarProps) {
-  const { imageSrc, gravatarFallbackMd5, size, alt, title, href } = props;
-  const rootClass = classNames("aspect-square rounded-full", sizesPropsBySize[size]);
-  let avatar = (
-    <AvatarPrimitive.Root
-      className={classNames(
-        "bg-emphasis item-center relative inline-flex aspect-square justify-center overflow-hidden rounded-full",
-        props.className,
-        sizesPropsBySize[size]
-      )}>
-      <>
+export default function Avatar({ imageSrc, size, alt, className, levelDetails }: AvatarProps) {
+  return (
+    <span className={classNames("relative h-fit", sizesPropsBySize[size])}>
+      <AvatarPrimitive.Root
+        className={classNames(
+          "item-center relative inline-flex aspect-square justify-center overflow-hidden rounded-full bg-white shadow",
+          className,
+          sizesPropsBySize[size]
+        )}>
         <AvatarPrimitive.Image
           src={imageSrc ?? undefined}
           alt={alt}
-          className={classNames("aspect-square rounded-full", sizesPropsBySize[size])}
+          className={classNames(
+            "relative z-10 aspect-square rounded-full",
+            { "scale-90": !!levelDetails },
+            sizesPropsBySize[size]
+          )}
         />
-        <AvatarPrimitive.Fallback delayMs={600} asChild={props.asChild}>
-          <>
-            {props.fallback && !gravatarFallbackMd5 && props.fallback}
-            {gravatarFallbackMd5 && (
-              <Image src={defaultAvatarSrc({ md5: gravatarFallbackMd5 })} alt={alt} className={rootClass} />
-            )}
-          </>
-        </AvatarPrimitive.Fallback>
-        {props.accepted && (
+        {levelDetails && (
           <div
-            className={classNames(
-              "text-inverted absolute bottom-0 right-0 block rounded-full bg-green-400 ring-2 ring-white",
-              size === "lg" ? "h-5 w-5" : "h-2 w-2"
-            )}>
-            <div className="flex h-full items-center justify-center p-[2px]">
-              {size === "lg" && <FiCheck />}
-            </div>
-          </div>
+            className="absolute left-0 top-0 z-0 h-full w-full bg-primary-500"
+            style={{
+              backgroundImage: `linear-gradient(180deg, transparent 50%, white 50%),
+      linear-gradient(90deg, white 50%, transparent 50%)`,
+            }}
+          />
         )}
-      </>
-    </AvatarPrimitive.Root>
-  );
-
-  if (href) {
-    avatar = <Link href={href}>{avatar}</Link>;
-  }
-
-  return title ? (
-    <Tooltip.Provider>
-      <Tooltip.Tooltip delayDuration={300}>
-        <Tooltip.TooltipTrigger className="cursor-default">{avatar}</Tooltip.TooltipTrigger>
-        <Tooltip.Content className="text-inverted rounded-sm bg-black p-2 text-sm shadow-sm">
-          <Tooltip.Arrow />
-          {title}
-        </Tooltip.Content>
-      </Tooltip.Tooltip>
-    </Tooltip.Provider>
-  ) : (
-    <>{avatar}</>
+      </AvatarPrimitive.Root>
+      {levelDetails && (
+        <div className="absolute right-0 top-0 z-40 h-7 w-7 rounded-full bg-gray-300">
+          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            {LEVEL_ROMAN_NUMERALS[levelDetails.level]}
+          </span>
+        </div>
+      )}
+    </span>
   );
 }
+
+const LEVEL_ROMAN_NUMERALS: { [key in UserLevel]: string } = {
+  [UserLevel.ONE]: "I",
+  [UserLevel.TWO]: "II",
+  [UserLevel.THREE]: "III",
+  [UserLevel.FOUR]: "IV",
+  [UserLevel.FIVE]: "V",
+};

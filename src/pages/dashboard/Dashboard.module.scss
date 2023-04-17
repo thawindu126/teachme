@@ -1,0 +1,42 @@
+.left {
+  display: grid;
+  grid-template-rows: 12rem 1fr 6rem;
+}
+.top-section {
+  box-sizing: border-box;
+  padding: 3rem 5rem;
+}
+.name {
+  font-size: 1.6rem;
+  font-weight: 500;
+  letter-spacing: 0.05rem;
+}
+.achievement-badge {
+  width: 3.8rem;
+  height: 3.8rem;
+}
+.mic {
+  height: 16rem;
+  border-radius: 50%;
+  box-shadow: 0 0 6px 0 rgba(43, 42, 42, 30%);
+}
+
+.session-record-title {
+  align-self: self-start;
+  width: 100%;
+  margin-left: 2rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.7rem;
+}
+
+@media screen and (max-width: 769px) {
+  .background {
+    grid-template-columns: 1fr;
+  }
+  .left {
+    grid-column: 1 / 2;
+  }
+  .right {
+    grid-column: 1 / 2;
+  }
+}

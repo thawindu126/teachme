@@ -1,8 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { UserStatus } from "@prisma/client";
 import { signOut, useSession } from "next-auth/react";
-import Image, { type StaticImageData } from "next/image";
-import Link from "next/link";
+import { type StaticImageData } from "next/image";
 import { useRouter } from "next/router";
 import { Fragment, useCallback, useEffect, useMemo, useState, type ReactNode, type SVGProps } from "react";
 import { HiXMark } from "react-icons/hi2";
@@ -13,10 +12,10 @@ import Logo from "~/assets/logo.png";
 import SessionRecordsIcon from "~/assets/session-records-icon";
 import SessionsIcon from "~/assets/sessions-icon";
 import SettingsIcon from "~/assets/settings-icon";
-import Header from "~/components/Header/Header";
+import { Header } from "~/components";
+import SidebarButton from "~/components/DashboardLayout/SidebarButton";
 import { Tooltip, TooltipTheme } from "~/components/ui";
 import { classNames } from "~/lib/classNames";
-import { WEBAPP_URL } from "~/lib/constants";
 import { api } from "~/utils/api";
 
 function useRedirectToLoginIfUnauthenticated() {
@@ -27,10 +26,7 @@ function useRedirectToLoginIfUnauthenticated() {
   useEffect(() => {
     if (!loading && !session) {
       void router.replace({
-        pathname: "/auth/login",
-        query: {
-          callbackUrl: `${WEBAPP_URL}${location.pathname}${location.search}`,
-        },
+        pathname: "/login",
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -58,6 +54,13 @@ function useRedirectToOnboardingIfNeeded() {
   };
 }
 
+export interface NavigationItem {
+  icon: ((props: SVGProps<SVGSVGElement>) => JSX.Element) | StaticImageData;
+  current: boolean;
+  href: string;
+  name: string;
+}
+
 interface DashboardLayoutProps {
   children: ReactNode;
   headerContent?: JSX.Element | JSX.Element[];
@@ -70,11 +73,15 @@ export default function DashboardLayout({ children, headerContent, className }: 
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  useEffect(() => {
+    console.log("from DashboardLayout()");
+  }, []);
+
   const isActive = useCallback(
     (path: string, exact = false) => {
       const split = router.pathname.split("/").filter((str) => str.trim());
       if (exact) {
-        return split?.[0] === path;
+        return split.length === 1 && split?.[0] === path;
       }
 
       if (split.length === 1 && split[0] === path) {
@@ -86,7 +93,7 @@ export default function DashboardLayout({ children, headerContent, className }: 
     [router.pathname]
   );
 
-  const sidebarNavigation = useMemo(
+  const sidebarNavigation = useMemo<NavigationItem[]>(
     () => [
       {
         name: "Dashboard",
@@ -96,9 +103,9 @@ export default function DashboardLayout({ children, headerContent, className }: 
       },
       {
         name: "New session",
-        href: "/dashboard/sessions/new",
+        href: `/dashboard/sessions/${user?.activeSessionRecordId || "new"}`,
         icon: SessionsIcon,
-        current: isActive("session"),
+        current: isActive("sessions"),
       },
       {
         name: "Session records",
@@ -125,7 +132,7 @@ export default function DashboardLayout({ children, headerContent, className }: 
         current: isActive("settings"),
       },
     ],
-    [isActive]
+    [isActive, user?.activeSessionRecordId]
   );
   const [mainNavigation, settingsNavigation] = useMemo(
     () => [sidebarNavigation.slice(0, -1), sidebarNavigation[sidebarNavigation.length - 1]],
@@ -138,58 +145,36 @@ export default function DashboardLayout({ children, headerContent, className }: 
       <div className="fixed bottom-0 left-0 z-30 hidden h-[calc(100vh-4rem)] w-20 overflow-y-auto overflow-x-hidden bg-primary-700 md:block">
         <div className="flex h-full w-full flex-col items-center py-6">
           <div className="flex w-full flex-1 flex-col items-center gap-y-2">
-            {mainNavigation.map((item) => (
-              <Tooltip key={item.name} content={item.name} theme={TooltipTheme.Dark} placement="right">
-                <Link
-                  href={item.href}
-                  className={classNames(
-                    item.current
-                      ? "bg-primary-700 text-white"
-                      : "text-primary-100 hover:bg-primary-700 hover:text-white",
-                    "group flex h-20 w-20 flex-col items-center justify-center rounded-md p-3 text-xs font-medium"
-                  )}
-                  aria-current={item.current ? "page" : undefined}>
-                  {/* <item.icon
-                      className={classNames(
-                        item.current
-                          ? 'text-white'
-                          : 'text-primary-300 group-hover:text-white',
-                        'h-6 w-6'
-                      )}
-                      aria-hidden="true"
-                    /> */}
-                  <SidebarIcon src={item.icon} alt={item.name} current={item.current} />
-                </Link>
-              </Tooltip>
-            ))}
-            {settingsNavigation && (
-              <Tooltip content={settingsNavigation.name} theme={TooltipTheme.Dark} placement="right">
-                <Link
-                  href={settingsNavigation.href}
-                  className={classNames(
-                    settingsNavigation.current
-                      ? "bg-primary-700 text-white"
-                      : "text-primary-100 hover:bg-primary-700 hover:text-white",
-                    "group mt-auto flex h-20 w-20 flex-col items-center justify-center rounded-md p-3 text-xs font-medium"
-                  )}
-                  aria-current={settingsNavigation.current ? "page" : undefined}>
-                  {/* <settingsNavigation.icon
+            <div className="flex w-full flex-1 flex-col items-center gap-y-2">
+              {mainNavigation.map((item) => (
+                <Tooltip key={item.name} content={item.name} theme={TooltipTheme.Dark} placement="right">
+                  <SidebarButton
+                    {...item}
+                    className={classNames(
+                      item.current
+                        ? "bg-primary-700 text-white"
+                        : "text-primary-100 hover:bg-primary-700 hover:text-white",
+                      "group flex h-20 w-20 flex-col items-center justify-center rounded-md p-3 text-xs font-medium"
+                    )}
+                  />
+                </Tooltip>
+              ))}
+            </div>
+            <div className="flex w-full flex-col items-center justify-center">
+              {settingsNavigation && (
+                <Tooltip content={settingsNavigation.name} theme={TooltipTheme.Dark} placement="right">
+                  <SidebarButton
+                    {...settingsNavigation}
                     className={classNames(
                       settingsNavigation.current
-                        ? 'text-white'
-                        : 'text-primary-300 group-hover:text-white',
-                      'h-6 w-6'
+                        ? "bg-primary-700 text-white"
+                        : "text-primary-100 hover:bg-primary-700 hover:text-white",
+                      "group flex h-20 w-20 flex-col items-center justify-center rounded-md p-3 text-xs font-medium"
                     )}
-                    aria-hidden="true"
-                  /> */}
-                  <SidebarIcon
-                    src={settingsNavigation.icon}
-                    alt={settingsNavigation.name}
-                    current={settingsNavigation.current}
                   />
-                </Link>
-              </Tooltip>
-            )}
+                </Tooltip>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -247,29 +232,18 @@ export default function DashboardLayout({ children, headerContent, className }: 
                   <nav className="flex flex-1 flex-col pb-4">
                     <div className="space-y-1">
                       {sidebarNavigation.map((item) => (
-                        <Link
+                        <SidebarButton
                           key={item.name}
-                          href={item.href}
+                          {...item}
                           className={classNames(
                             item.current
                               ? "bg-primary-50 border-primary-500 text-primary-700"
                               : "border-transparent text-gray-500 hover:border-primary-300 hover:bg-gray-50 hover:text-gray-700",
                             "block border-l-4 py-2 pl-3 pr-4 text-base font-medium sm:pl-5 sm:pr-6",
                             "group flex items-center gap-2 rounded-sm px-3 py-2 text-sm font-medium"
-                          )}
-                          aria-current={item.current ? "page" : undefined}>
-                          {/* <item.icon
-                              className={classNames(
-                                item.current
-                                  ? 'text-primary-700'
-                                  : 'text-primary-300 group-hover:text-primary-500',
-                                'mr-3 h-6 w-6'
-                              )}
-                              aria-hidden="true"
-                            /> */}
-                          <SidebarIcon src={item.icon} alt={item.name} current={item.current} />
+                          )}>
                           <span>{item.name}</span>
-                        </Link>
+                        </SidebarButton>
                       ))}
                     </div>
                   </nav>
@@ -316,45 +290,12 @@ export default function DashboardLayout({ children, headerContent, className }: 
       {/* Content area */}
       <main
         className={classNames(
-          "ml-20 flex h-[calc(100vh-4rem)] w-[calc(100vw-5rem)] flex-col overflow-hidden",
+          "flex h-[calc(100vh-4rem)] w-full flex-col overflow-hidden md:ml-20 md:w-[calc(100vw-5rem)]",
           className
         )}>
         {/* Main content */}
         {children}
       </main>
     </div>
-  );
-}
-
-function SidebarIcon({
-  src,
-  alt,
-  current,
-}: {
-  src: ((props: SVGProps<SVGSVGElement>) => JSX.Element) | StaticImageData;
-  alt: string;
-  current: boolean;
-}) {
-  if (typeof src === "function") {
-    const Src = src;
-    return (
-      <Src
-        className={classNames("h-5 w-5", current ? "text-white" : "text-primary-900 group-hover:text-white")}
-        aria-hidden="true"
-      />
-    );
-  }
-
-  return (
-    <Image
-      src={src}
-      alt={alt}
-      className={classNames("h-5 w-5", {
-        "[filter:invert(11%)_sepia(96%)_saturate(3169%)_hue-rotate(350deg)_brightness(85%)_contrast(107%)] group-hover:invert":
-          !current,
-        invert: current,
-      })}
-      aria-hidden="true"
-    />
   );
 }

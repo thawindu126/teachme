@@ -2,7 +2,7 @@ import { type GetServerSidePropsContext } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "~/assets/logo.png";
-import AuthLayout from "~/components/AuthLayout/AuthLayout";
+import { AuthLayout } from "~/components";
 import { Button } from "~/components/ui";
 import { IS_GOOGLE_LOGIN_ENABLED } from "~/lib/constants";
 import SignUpForm from "~/pages/signup/SignUpForm";

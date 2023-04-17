@@ -9,5 +9,6 @@ export { default as Input, type InputProps } from "~/components/ui/Input/Input";
 export { default as Loader } from "~/components/ui/Loader/Loader";
 export { default as MultiValueInput } from "~/components/ui/MultiValueInput/MultiValueInput";
 export { default as Select, type SelectItem, type SelectStateType } from "~/components/ui/Select/Select";
+export { default as TextArea } from "~/components/ui/TextArea/TextArea";
 export { default as Tooltip, TooltipTheme } from "~/components/ui/Tooltip/Tooltip";
 export { Toaster, default as toast } from "~/components/ui/toast/toast";

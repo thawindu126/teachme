@@ -1,6 +1,6 @@
 import { signIn } from "next-auth/react";
 import { useCallback, useState, type ChangeEvent, type FormEventHandler } from "react";
-import GoogleAuthButton from "~/components/GoogleAuthButton/GoogleAuthButton";
+import { GoogleAuthButton } from "~/components";
 import { Button, Checkbox, Input } from "~/components/ui";
 import { EMAIL_REGEX, PASSWORD_REGEX } from "~/lib/auth/validations";
 import { api } from "~/utils/api";

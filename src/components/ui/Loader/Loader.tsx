@@ -17,9 +17,10 @@ export enum LoaderColor {
 type Props = {
   size?: LoaderSize;
   color?: LoaderColor;
+  className?: string;
 };
 
-export default function Loader({ size = LoaderSize.Three, color = LoaderColor.Primary }: Props) {
+export default function Loader({ size = LoaderSize.Three, color = LoaderColor.Primary, className }: Props) {
   const classes = useMemo(() => {
     const differingClasses = [];
 
@@ -49,8 +50,8 @@ export default function Loader({ size = LoaderSize.Three, color = LoaderColor.Pr
         differingClasses.push("text-white");
     }
 
-    return classNames("animate-spin", "-ml-1", "mr-3", ...differingClasses);
-  }, [color, size]);
+    return classNames("animate-spin", ...differingClasses, className);
+  }, [className, color, size]);
 
   return (
     <svg className={classes} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

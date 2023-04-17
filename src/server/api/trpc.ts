@@ -124,6 +124,8 @@ async function getUserFromSession(session: Maybe<Session>) {
       avatar: true,
       highestEducationalExperience: true,
       interestedTopics: true,
+      points: true,
+      activeSessionRecordId: true,
       identityProvider: true,
     },
   });
