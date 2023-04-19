@@ -1,6 +1,6 @@
 import Image from "next/image";
-import BackgroundPatternRedScreenshot from "~/assets/background-pattern-red.png";
-import Logo from "~/assets/logo.png";
+import BackgroundPatternRedScreenshot from "~/assets/background-pattern-red.webp";
+import Logo from "~/assets/logo.webp";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (

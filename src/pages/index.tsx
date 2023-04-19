@@ -1,19 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
-import AchievementsScreenshot from "~/assets/achievements-screenshot.png";
-import BackgroundPatternRedScreenshot from "~/assets/background-pattern-red.png";
-import CurrentSessionScreenshot from "~/assets/current-session-screenshot.png";
+import AchievementsScreenshot from "~/assets/achievements-screenshot.webp";
+import BackgroundPatternRedScreenshot from "~/assets/background-pattern-red.webp";
+import CurrentSessionScreenshot from "~/assets/current-session-screenshot.webp";
 import FacebookIcon from "~/assets/facebook-icon";
-import HomePageScreenshot from "~/assets/home-page-screenshot.png";
+import HomePageScreenshot from "~/assets/home-page-screenshot.webp";
 import InstagramIcon from "~/assets/instagram-icon";
 import MailIcon from "~/assets/mail-icon";
-import NewSessionScreenshot from "~/assets/new-session-screenshot.png";
+import NewSessionScreenshot from "~/assets/new-session-screenshot.webp";
 import PhoneIcon from "~/assets/phone-icon";
-import SessionRecordsScreenshot from "~/assets/session-records-screenshot.png";
-import SessionSummaryScreenshot from "~/assets/session-summary-screenshot.png";
-import SubscriptionPlansScreenshot from "~/assets/subscription-plans-screenshot.png";
+import SessionRecordsScreenshot from "~/assets/session-records-screenshot.webp";
+import SessionSummaryScreenshot from "~/assets/session-summary-screenshot.webp";
+import SubscriptionPlansScreenshot from "~/assets/subscription-plans-screenshot.webp";
 import { Header } from "~/components";
-import { Button, Carousel, type CarouselImage } from "~/components/ui";
+import type { CarouselImage } from "~/components/ui";
+import { Button, Carousel } from "~/components/ui";
 import { SOCIALS } from "~/lib/constants";
 
 const SCREENSHOTS: CarouselImage[] = [

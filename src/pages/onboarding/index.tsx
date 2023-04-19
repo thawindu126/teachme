@@ -1,11 +1,16 @@
+import { UserStatus } from "@prisma/client";
+import type { GetServerSidePropsContext } from "next";
 import { NextSeo } from "next-seo";
 import Image from "next/image";
-import BackgroundPatternTransparent from "~/assets/background-pattern-transparent.png";
-import Logo from "~/assets/logo.png";
+import BackgroundPatternTransparent from "~/assets/background-pattern-transparent.webp";
+import Logo from "~/assets/logo.webp";
+import { OnboardingForm } from "~/components";
 import { classNames } from "~/lib/classNames";
-import OnboardingForm from "~/pages/onboarding/OnboardingForm";
+import { getServerAuthSession } from "~/server/auth";
+import { prisma } from "~/server/db";
+import { ssrInit } from "~/server/lib/ssr";
 
-import styles from "./onboarding.module.css";
+import styles from "./Onboarding.module.scss";
 
 export default function Onboarding() {
   return (
@@ -41,4 +46,30 @@ export default function Onboarding() {
       </div>
     </>
   );
+}
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const ssr = await ssrInit(ctx);
+
+  const session = await getServerAuthSession(ctx);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  const user = await prisma.user.findFirst({ where: { id: session.user.id } });
+  if (user?.status !== UserStatus.PENDING) {
+    return {
+      redirect: {
+        destination: "/dashboard",
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: { trpcState: ssr.dehydrate() } };
 }

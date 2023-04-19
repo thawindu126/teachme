@@ -1,17 +1,26 @@
-import { type GetServerSidePropsContext } from "next";
+import type { GetServerSidePropsContext } from "next";
 import { NextSeo } from "next-seo";
-import { DashboardLayout, StartSessionButton } from "~/components";
+import BackgroundPatternTransparent from "~/assets/background-pattern-transparent.webp";
+import { BackButton, DashboardLayout, StartSessionButton } from "~/components";
+import { classNames } from "~/lib/classNames";
 import { getServerAuthSession } from "~/server/auth";
 import { prisma } from "~/server/db";
 import { ssrInit } from "~/server/lib/ssr";
-import { type inferSSRProps } from "~/types/inferSSRProps";
+import type { inferSSRProps } from "~/types/inferSSRProps";
 
 export default function NewSession({}: inferSSRProps<typeof getServerSideProps>) {
   return (
     <>
       <NextSeo title="New Session | TeachMe" />
       <DashboardLayout>
-        <StartSessionButton />
+        <div
+          className={classNames(
+            "flex h-full flex-col space-y-4 bg-white bg-opacity-25 bg-cover bg-center bg-no-repeat px-4 pt-6 bg-blend-color"
+          )}
+          style={{ backgroundImage: `url(${BackgroundPatternTransparent.src})` }}>
+          <BackButton />
+          <StartSessionButton />
+        </div>
       </DashboardLayout>
     </>
   );
@@ -19,6 +28,7 @@ export default function NewSession({}: inferSSRProps<typeof getServerSideProps>)
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const ssr = await ssrInit(ctx);
+
   const session = await getServerAuthSession(ctx);
   const user = await prisma.user.findFirst({ where: { id: session?.user.id } });
   if (user?.activeSessionRecordId) {
@@ -27,5 +37,9 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     };
   }
 
-  return { props: { trpcState: ssr.dehydrate() } };
+  return {
+    props: {
+      trpcState: ssr.dehydrate(),
+    },
+  };
 }

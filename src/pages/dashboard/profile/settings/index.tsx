@@ -1,8 +1,7 @@
-import { type HighestEducationalExperience as HighestEducationalExperienceType } from "@prisma/client";
-import { type GetServerSidePropsContext } from "next";
+import type { HighestEducationalExperience as HighestEducationalExperienceType } from "@prisma/client";
 import { NextSeo } from "next-seo";
 import { useCallback, useRef, useState, type ChangeEvent } from "react";
-import BackgroundPatternTransparent from "~/assets/background-pattern-transparent.png";
+import BackgroundPatternTransparent from "~/assets/background-pattern-transparent.webp";
 import { Avatar, BackButton, DashboardLayout } from "~/components";
 import {
   Button,
@@ -13,9 +12,9 @@ import {
   Select,
   toast,
   type SelectItem,
+  LoaderSize,
 } from "~/components/ui";
 import { HIGHEST_EDUCATIONAL_EXPERIENCES } from "~/constants/highest-educational-experiences";
-import { ssrInit } from "~/server/lib/ssr";
 import { api } from "~/utils/api";
 
 export default function ProfileSettings() {
@@ -86,7 +85,7 @@ export default function ProfileSettings() {
             <div className="relative flex w-full flex-auto overflow-hidden rounded-b-sm rounded-t-3xl bg-gray-50 bg-opacity-80 px-12 py-12 shadow md:px-24">
               {!user || isUserLoading ? (
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                  <Loader />
+                  <Loader size={LoaderSize.Five} />
                 </div>
               ) : (
                 <div className="mx-auto max-w-5xl flex-auto space-y-6 overflow-y-auto">
@@ -107,9 +106,9 @@ export default function ProfileSettings() {
                       />
                       <ImageUploader
                         target="avatar"
-                        id="avatar-upload"
                         buttonMsg="Update profile picture"
                         handleAvatarChange={(newAvatar) => {
+                          console.log(avatarRef, newAvatar);
                           if (!avatarRef.current) {
                             return;
                           }
@@ -199,9 +198,4 @@ export default function ProfileSettings() {
       </DashboardLayout>
     </>
   );
-}
-
-export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  const ssr = await ssrInit(ctx);
-  return { props: { trpcState: ssr.dehydrate() } };
 }

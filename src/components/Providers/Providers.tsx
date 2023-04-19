@@ -1,4 +1,4 @@
-import { type Session } from "next-auth";
+import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 import { Poppins } from "next/font/google";

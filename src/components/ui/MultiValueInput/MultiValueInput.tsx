@@ -1,12 +1,12 @@
-import {
-  useState,
-  type ChangeEventHandler,
-  type DetailedHTMLProps,
-  type Dispatch,
-  type InputHTMLAttributes,
-  type KeyboardEventHandler,
-  type SetStateAction,
+import type {
+  ChangeEventHandler,
+  DetailedHTMLProps,
+  Dispatch,
+  InputHTMLAttributes,
+  KeyboardEventHandler,
+  SetStateAction,
 } from "react";
+import { useState } from "react";
 import { classNames } from "~/lib/classNames";
 
 import styles from "./MultiValueInput.module.scss";

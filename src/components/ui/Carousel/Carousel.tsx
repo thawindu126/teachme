@@ -1,6 +1,8 @@
-import { type Options, Splide, SplideSlide } from "@splidejs/react-splide";
+import type { Options } from "@splidejs/react-splide";
+import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
-import Image, { type StaticImageData } from "next/image";
+import type { StaticImageData } from "next/image";
+import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { classNames } from "~/lib/classNames";
 

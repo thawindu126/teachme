@@ -1,15 +1,14 @@
-import { type GetServerSidePropsContext } from "next";
+import type { GetServerSidePropsContext } from "next";
 import { NextSeo } from "next-seo";
 import Image from "next/image";
 import Link from "next/link";
-import Logo from "~/assets/logo.png";
-import { AuthLayout } from "~/components";
+import Logo from "~/assets/logo.webp";
+import { AuthLayout, LoginForm } from "~/components";
 import { Button } from "~/components/ui";
 import { IS_GOOGLE_LOGIN_ENABLED } from "~/lib/constants";
-import LoginForm from "~/pages/login/LoginForm";
 import { getServerAuthSession } from "~/server/auth";
 import { ssrInit } from "~/server/lib/ssr";
-import { type inferSSRProps } from "~/types/inferSSRProps";
+import type { inferSSRProps } from "~/types/inferSSRProps";
 
 export default function Login({ isGoogleLoginEnabled }: inferSSRProps<typeof getServerSideProps>) {
   return (
@@ -21,6 +20,7 @@ export default function Login({ isGoogleLoginEnabled }: inferSSRProps<typeof get
             <div className="flex justify-between pl-8 lg:justify-end">
               <Image
                 src={Logo}
+                priority
                 alt="TeachMe"
                 className="mt-36 block h-32 w-32 lg:hidden"
                 aria-hidden="true"

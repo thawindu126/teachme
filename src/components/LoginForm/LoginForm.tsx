@@ -1,6 +1,8 @@
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { useCallback, useState, type ChangeEvent, type FormEventHandler } from "react";
+import { useRouter } from "next/router";
+import type { ChangeEvent, FormEventHandler } from "react";
+import { useCallback, useState } from "react";
 import { GoogleAuthButton } from "~/components";
 import { Button, Checkbox, Input } from "~/components/ui";
 
@@ -9,6 +11,7 @@ interface LoginFormProps {
 }
 
 export default function LoginForm({ isGoogleLoginEnabled }: LoginFormProps) {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -25,11 +28,15 @@ export default function LoginForm({ isGoogleLoginEnabled }: LoginFormProps) {
       void signIn("credentials", {
         email,
         password,
-        callbackUrl: "/dashboard",
         redirect: false,
+        callbackUrl: "/dashboard",
+      }).then((res) => {
+        if (res?.url) {
+          void router.push(res.url);
+        }
       });
     },
-    [email, password]
+    [email, password, router]
   );
 
   const onEmailChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
@@ -48,7 +55,7 @@ export default function LoginForm({ isGoogleLoginEnabled }: LoginFormProps) {
           <div className="text-center text-sm text-gray-600">or Sign in with Email</div>
         </div>
       )}
-      <form onSubmit={handleSubmit} className="flex flex-col space-y-8">
+      <form onSubmit={(event) => handleSubmit(event)} className="flex flex-col space-y-8">
         <div className="space-y-4">
           <Input
             type="email"
@@ -82,11 +89,7 @@ export default function LoginForm({ isGoogleLoginEnabled }: LoginFormProps) {
             </Checkbox>
           </div>
         </div>
-        <Button
-          type="submit"
-          size="lg"
-          className="self-end"
-          onClick={() => void signIn("credentials", { email, password })}>
+        <Button type="submit" size="lg" className="self-end">
           Login
         </Button>
         <Link href="/forgot-password" className="self-end hover:underline">

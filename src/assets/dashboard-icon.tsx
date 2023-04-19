@@ -1,4 +1,4 @@
-import { type SVGProps } from "react";
+import type { SVGProps } from "react";
 
 export default function DashboardIcon(props: SVGProps<SVGSVGElement>) {
   return (

@@ -44,7 +44,7 @@ export default function RetrySessionButton({
   );
 
   if (disabled) {
-    return <Tooltip content="Hello">{element}</Tooltip>;
+    return <Tooltip content="Please finish your ongoing sessions first">{element}</Tooltip>;
   }
 
   return element;

@@ -6,19 +6,18 @@ import { prisma } from "~/server/db";
 
 const querySchema = z
   .object({
-    id: z.string(),
+    email: z.string().email(),
   })
   .partial();
 
 async function getIdentityData(req: NextApiRequest) {
-  const { id } = querySchema.parse(req.query);
-
-  if (!id) {
+  const { email } = querySchema.parse(req.query);
+  if (!email) {
     return null;
   }
 
   const user = await prisma.user.findUnique({
-    where: { id },
+    where: { email },
     select: { name: true, email: true, avatar: true },
   });
   return {

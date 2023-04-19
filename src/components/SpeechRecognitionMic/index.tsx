@@ -1,5 +1,6 @@
 import { createSpeechlySpeechRecognition } from "@speechly/speech-recognition-polyfill";
-import { type Dispatch, type SetStateAction, useCallback, useEffect } from "react";
+import type { Dispatch, SetStateAction } from "react";
+import { useCallback, useEffect } from "react";
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import MicButton from "~/components/MicButton/MicButton";
 

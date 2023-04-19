@@ -1,6 +1,7 @@
-import { type Session } from "next-auth";
+import type { Session } from "next-auth";
+import { getSession } from "next-auth/react";
 import { DefaultSeo } from "next-seo";
-import { type AppType } from "next/app";
+import type { AppType } from "next/app";
 import { Providers } from "~/components";
 import "~/styles/globals.css";
 import { api } from "~/utils/api";
@@ -15,6 +16,12 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
       <Component {...pageProps} />
     </Providers>
   );
+};
+
+MyApp.getInitialProps = async ({ ctx }) => {
+  return {
+    session: await getSession(ctx),
+  };
 };
 
 export default api.withTRPC(MyApp);

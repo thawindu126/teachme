@@ -1,5 +1,6 @@
 import { Listbox, Transition } from "@headlessui/react";
-import { type Dispatch, Fragment, type SetStateAction, useCallback, useMemo } from "react";
+import type { Dispatch, SetStateAction } from "react";
+import { Fragment, useCallback, useMemo } from "react";
 import { HiCheck, HiChevronUpDown } from "react-icons/hi2";
 import { classNames } from "~/lib/classNames";
 

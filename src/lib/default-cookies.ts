@@ -1,4 +1,4 @@
-import { type CookieSerializeOptions } from "cookie";
+import type { CookieSerializeOptions } from "cookie";
 import type { CookiesOptions } from "next-auth";
 import { isENVDev } from "~/lib/env";
 

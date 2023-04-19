@@ -1,4 +1,5 @@
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/router";
 import { useCallback, useState, type ChangeEvent, type FormEventHandler } from "react";
 import { GoogleAuthButton } from "~/components";
 import { Button, Checkbox, Input } from "~/components/ui";
@@ -10,14 +11,18 @@ interface SignUpFormProps {
 }
 
 export default function SignUpForm({ isGoogleLoginEnabled }: SignUpFormProps) {
-  const mutation = api.auth.signUp.useMutation({
+  const router = useRouter();
+  const { mutate: signUp, isLoading: signUpInProgress } = api.auth.signUp.useMutation({
     async onSuccess() {
-      await signIn("credentials", {
+      const res = await signIn("credentials", {
         email,
         password,
-        callbackUrl: "/onboarding",
         redirect: false,
+        callbackUrl: "/onboarding",
       });
+      if (res?.url) {
+        await router.push(res.url);
+      }
     },
     onError() {
       resetFields();
@@ -66,10 +71,10 @@ export default function SignUpForm({ isGoogleLoginEnabled }: SignUpFormProps) {
       setErrors(newErrors);
 
       if (Object.values(newErrors).every((e) => !e)) {
-        mutation.mutate({ email, password });
+        signUp({ email, password });
       }
     },
-    [confirmPassword, email, errors, mutation, password]
+    [confirmPassword, email, errors, password, signUp]
   );
 
   const onEmailChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
@@ -125,7 +130,7 @@ export default function SignUpForm({ isGoogleLoginEnabled }: SignUpFormProps) {
             Show Password
           </Checkbox>
         </div>
-        <Button type="submit" size="lg" className="self-end">
+        <Button type="submit" size="lg" className="self-end" loading={signUpInProgress}>
           Sign Up
         </Button>
       </form>

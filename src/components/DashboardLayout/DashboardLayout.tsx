@@ -1,21 +1,24 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { UserStatus } from "@prisma/client";
 import { signOut, useSession } from "next-auth/react";
-import { type StaticImageData } from "next/image";
+import type { StaticImageData } from "next/image";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { Fragment, useCallback, useEffect, useMemo, useState, type ReactNode, type SVGProps } from "react";
+import type { ReactNode, SVGProps } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { HiXMark } from "react-icons/hi2";
 import AchievementsIcon from "~/assets/achievements.png";
 import ChaptersIcon from "~/assets/chapters-icon";
 import DashboardIcon from "~/assets/dashboard-icon";
-import Logo from "~/assets/logo.png";
+import Logo from "~/assets/logo.webp";
 import SessionRecordsIcon from "~/assets/session-records-icon";
 import SessionsIcon from "~/assets/sessions-icon";
 import SettingsIcon from "~/assets/settings-icon";
 import { Header } from "~/components";
 import SidebarButton from "~/components/DashboardLayout/SidebarButton";
-import { Tooltip, TooltipTheme } from "~/components/ui";
+import { Button, Tooltip, TooltipTheme } from "~/components/ui";
 import { classNames } from "~/lib/classNames";
 import matchPath from "~/lib/matchPath";
 import { api } from "~/utils/api";
@@ -91,7 +94,7 @@ export default function DashboardLayout({ children, headerContent, className }: 
         current: isActive("/dashboard"),
       },
       {
-        name: "New session",
+        name: "Session",
         href: `/dashboard/sessions/${user?.activeSessionRecordId || "new"}`,
         icon: SessionsIcon,
         current: isActive("/dashboard/sessions/:id/*"),
@@ -227,10 +230,11 @@ export default function DashboardLayout({ children, headerContent, className }: 
                           className={classNames(
                             item.current
                               ? "bg-primary-50 border-primary-500 text-primary-700"
-                              : "border-transparent text-gray-500 hover:border-primary-300 hover:bg-gray-50 hover:text-gray-700",
+                              : "border-transparent text-gray-500 hover:border-primary-500 hover:bg-gray-50 hover:text-gray-700",
                             "block border-l-4 py-2 pl-3 pr-4 text-base font-medium sm:pl-5 sm:pr-6",
                             "group flex items-center gap-2 rounded-sm px-3 py-2 text-sm font-medium"
-                          )}>
+                          )}
+                          mobile>
                           <span>{item.name}</span>
                         </SidebarButton>
                       ))}
@@ -238,11 +242,32 @@ export default function DashboardLayout({ children, headerContent, className }: 
                   </nav>
                   <div className="flex-1 border-t border-gray-200 pb-3 pt-4">
                     <div className="flex items-center gap-2.5 px-4 sm:px-6">
-                      <div className="flex-shrink-0">
-                        <span className="inline-block h-8 w-8 overflow-hidden rounded-full bg-gray-100">
-                          {/* {avatar && <img src={avatar} alt="Avatar" />} */}
-                        </span>
-                      </div>
+                      {(() => {
+                        if (!user?.email) {
+                          return (
+                            <Link href="/login">
+                              <Button>Log In</Button>
+                            </Link>
+                          );
+                        }
+
+                        if (!user.avatar) {
+                          return (
+                            <Link href="/dashboard">
+                              <Button size="sm">Go to Dashboard</Button>
+                            </Link>
+                          );
+                        }
+                        return (
+                          <Image
+                            className="h-12 w-12 rounded-full"
+                            src={user.avatar}
+                            alt={user.name || "You"}
+                            width={48}
+                            height={48}
+                          />
+                        );
+                      })()}
                       <div>
                         <div className="text-base font-medium text-gray-800">{/* {user?.name} */}</div>
                         <div className="text-sm font-medium text-gray-500">{/* {user?.email} */}</div>

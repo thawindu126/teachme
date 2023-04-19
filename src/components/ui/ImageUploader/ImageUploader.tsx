@@ -56,7 +56,7 @@ const useFileReader = (options: UseFileReaderProps) => {
 };
 
 type ImageUploaderProps = {
-  id: string;
+  id?: string;
   buttonMsg: string;
   handleAvatarChange: (imageSrc: string) => void;
   imageSrc?: string;
@@ -198,7 +198,7 @@ export default function ImageUploader({
           <DialogClose
             color="secondary"
             onClick={() => {
-              if (props.imageSrc === imageSrc) {
+              if (!result) {
                 return;
               }
               void showCroppedImage(croppedAreaPixels);

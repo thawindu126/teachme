@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { classNames } from "~/lib/classNames";
 
 import styles from "./Checkbox.module.scss";

@@ -21,8 +21,8 @@ const config = {
   async rewrites() {
     return [
       {
-        source: "/:userId/avatar.png",
-        destination: "/api/user/avatar?id=:userId",
+        source: "/:email/avatar.png",
+        destination: "/api/user/avatar?email=:email",
       },
     ];
   },
@@ -66,6 +66,15 @@ const config = {
       {
         protocol: "https",
         hostname: "www.gravatar.com",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+      },
+      {
+        protocol: "https",
+        // @ts-expect-error NEXT_PUBLIC_WEBAPP_URL environment variable exists
+        hostname: new URL(process.env.NEXT_PUBLIC_WEBAPP_URL).hostname,
       },
     ],
   },

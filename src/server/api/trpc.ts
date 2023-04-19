@@ -19,22 +19,18 @@
  * 2. INITIALIZATION
  *
  * This is where the tRPC API is initialized, connecting the context and transformer. We also parse
- * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
+ * ZodErrors so that you get type safety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
-import { initTRPC, type Maybe, TRPCError } from "@trpc/server";
-import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
-import { type Session } from "next-auth";
+import { TRPCError, initTRPC, type Maybe } from "@trpc/server";
+import type { CreateNextContextOptions } from "@trpc/server/adapters/next";
+import type { Session } from "next-auth";
 import superjson from "superjson";
 import { ZodError } from "zod";
 import { WEBAPP_URL } from "~/lib/constants";
 import { defaultAvatarSrc } from "~/lib/defaultAvatarImage";
 import { getServerAuthSession } from "~/server/auth";
 import { prisma } from "~/server/db";
-
-type CreateContextOptions = {
-  session: Session | null;
-};
 
 /**
  * This helper generates the "internals" for a tRPC context. If you need to use it, you can export
@@ -46,12 +42,6 @@ type CreateContextOptions = {
  *
  * @see https://create.t3.gg/en/usage/trpc#-serverapitrpcts
  */
-const createInnerTRPCContext = (opts: CreateContextOptions) => {
-  return {
-    session: opts.session,
-    prisma,
-  };
-};
 
 /**
  * This is the actual context you will use in your router. It will be used to process every request
@@ -64,10 +54,10 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
 
   // Get the session from the server using the getServerSession wrapper function
   const session = await getServerAuthSession({ req, res });
-
-  return createInnerTRPCContext({
+  return {
     session,
-  });
+    prisma,
+  };
 };
 
 const t = initTRPC.context<typeof createTRPCContext>().create({

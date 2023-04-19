@@ -105,12 +105,13 @@ enum SessionRecordAnswerGrade {
 }
 
 type SessionRecordAnswer {
-    id         String                   @map("_id") @db.ObjectId
-    questionId String                   @db.ObjectId
-    payload    String
-    score      Int
-    review     String
-    grade      SessionRecordAnswerGrade
+    id          String                   @map("_id") @db.ObjectId
+    questionId  String                   @db.ObjectId
+    payload     String
+    score       Int
+    review      String
+    modelAnswer String?
+    grade       SessionRecordAnswerGrade
 }
 
 enum SessionRecordStatus {

@@ -1,16 +1,9 @@
 import { SessionRecordStatus } from "@prisma/client";
-import {
-  useCallback,
-  useMemo,
-  useState,
-  type ChangeEvent,
-  type FormEventHandler,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import type { ChangeEvent, Dispatch, FormEventHandler, SetStateAction } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { HiChevronRight } from "react-icons/hi2";
-import BackgroundPatternTransparent from "~/assets/background-pattern-transparent.png";
-import Logo from "~/assets/logo.png";
+import BackgroundPatternTransparent from "~/assets/background-pattern-transparent.webp";
+import Logo from "~/assets/logo.webp";
 import { Avatar, BackButton } from "~/components";
 import SpeechRecognitionMic from "~/components/SpeechRecognitionMic";
 import { Input, Loader } from "~/components/ui";
@@ -68,7 +61,7 @@ export default function SessionStart({ id, setSessionRecordStatus }: SessionStar
             <Input
               value={topicInput}
               onChange={onTopicInputChange}
-              placeholder="Enter you topicInput"
+              placeholder="Enter your topic"
               className="bg-transparent text-3xl"
               wrapperClassName="space-y-4"
             />

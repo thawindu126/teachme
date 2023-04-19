@@ -46,10 +46,13 @@ export const sessionRecordsRouter = createTRPCRouter({
     .query(async ({ input, ctx }) => {
       const limit = input.limit ?? 50;
       const { status, cursor } = input;
-      const { prisma } = ctx;
+      const { user, prisma } = ctx;
 
       const items = await prisma.sessionRecord.findMany({
-        ...(status && { where: { status } }),
+        where: {
+          userId: user.id,
+          ...(status && { status }),
+        },
         take: limit + 1, // get an extra item at the end which we'll use as next cursor
         orderBy: {
           id: "asc",
@@ -109,7 +112,8 @@ export const sessionRecordsRouter = createTRPCRouter({
             (await getChatGPTResponse([
               {
                 role: "user",
-                content: `ask 10 questions about "${topic}" as someone who doesn't know anything about it. format { "questions": string[] }`,
+                content: `7 questions about "${topic}", newbie. response must parse as JSON { "questions": string[] }
+                `,
               },
             ])) ?? "{}"
           ) as { questions: string[] }
@@ -152,17 +156,14 @@ export const sessionRecordsRouter = createTRPCRouter({
       }
 
       try {
-        const { score, review } = JSON.parse(
+        const { score, review, modelAnswer } = JSON.parse(
           (await getChatGPTResponse([
             {
               role: "user",
-              content: `examine this answer: "${answerInput}" to the question: "${question.payload}".
-                factor in accuracy and strictly check for completeness.
-                score out of 100.
-                format { "score": number, "review": string }`,
+              content: `review answer: "${answerInput}" to: "${question.payload}". score out of 100. as strict as possible. format { "score": number, "review": string, modelAnswer: string }.`,
             },
           ])) ?? "{}"
-        ) as { score: number; review: string };
+        ) as { score: number; review: string; modelAnswer: string };
 
         const lastQuestion = currentQuestionIndex === questions.length - 1;
 
@@ -176,6 +177,7 @@ export const sessionRecordsRouter = createTRPCRouter({
                 questionId: question.id,
                 score,
                 review,
+                modelAnswer,
                 grade: (() => {
                   if (score >= 90) {
                     return SessionRecordAnswerGrade.A;
@@ -241,5 +243,25 @@ export const sessionRecordsRouter = createTRPCRouter({
     });
 
     return createdSessionRecord;
+  }),
+  end: protectedProcedure.input(z.object({ id: z.string().min(1) })).mutation(async ({ input, ctx }) => {
+    const { id } = input;
+    const { user, prisma } = ctx;
+
+    const sessionRecord = await prisma.sessionRecord.findFirst({ where: { id: input.id } });
+    if (!sessionRecord || sessionRecord.status === SessionRecordStatus.FINISHED) {
+      throw new TRPCError({ code: "BAD_REQUEST" });
+    }
+
+    await prisma.sessionRecord.update({
+      where: { id },
+      data: {
+        status: SessionRecordStatus.FINISHED,
+      },
+    });
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { activeSessionRecordId: null, points: { increment: sumAnswersScores(sessionRecord.answers) } },
+    });
   }),
 });

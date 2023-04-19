@@ -1,8 +1,6 @@
-import {
-  HighestEducationalExperience,
-  type HighestEducationalExperience as HighestEducationalExperienceType,
-} from "@prisma/client";
-import { type SelectItem } from "~/components/ui";
+import type { HighestEducationalExperience as HighestEducationalExperienceType } from "@prisma/client";
+import { HighestEducationalExperience } from "@prisma/client";
+import type { SelectItem } from "~/components/ui";
 
 export const HIGHEST_EDUCATIONAL_EXPERIENCES: SelectItem<HighestEducationalExperienceType>[] = [
   {

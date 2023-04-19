@@ -1,15 +1,12 @@
 import { SessionRecordStatus } from "@prisma/client";
-import { type GetServerSidePropsContext } from "next";
 import { NextSeo } from "next-seo";
 import Link from "next/link";
-import BackgroundPatternTransparent from "~/assets/background-pattern-transparent.png";
+import BackgroundPatternTransparent from "~/assets/background-pattern-transparent.webp";
 import { BackButton, DashboardLayout, RetrySessionButton, SessionRecordStatusBadge } from "~/components";
-import { Button, Loader } from "~/components/ui";
-import { ssrInit } from "~/server/lib/ssr";
-import { type inferSSRProps } from "~/types/inferSSRProps";
+import { Button, Loader, LoaderSize } from "~/components/ui";
 import { api } from "~/utils/api";
 
-export default function SessionsList({}: inferSSRProps<typeof getServerSideProps>) {
+export default function SessionsList() {
   const { data: user } = api.me.useQuery();
   const {
     data: sessionRecords,
@@ -42,6 +39,9 @@ export default function SessionsList({}: inferSSRProps<typeof getServerSideProps
               <p>Error: {error.message}</p>
             ) : (
               <div className="relative mb-12 mt-2 flex w-full flex-auto flex-col items-center space-y-4 overflow-hidden">
+                {sessionRecords?.pages?.[0]?.items.length === 0 && (
+                  <span className="ml-8 self-start">No sessions to show</span>
+                )}
                 {sessionRecords?.pages.map(({ items: sessionRecords }, i) => (
                   <ul className="h-full w-full space-y-1 overflow-y-auto overflow-x-hidden px-4" key={i}>
                     {sessionRecords.map((sessionRecord) => (
@@ -68,12 +68,16 @@ export default function SessionsList({}: inferSSRProps<typeof getServerSideProps
                           <div className="space-x-2">
                             <SessionRecordStatusBadge status={sessionRecord.status} />
                           </div>
-                          <div className="w-40 space-x-2">
-                            <span className="mr-1">Score:</span>
-                            <span className="w-fit rounded-2xl bg-red-50 px-2 py-1 font-semibold text-red-500">
-                              <span>{sessionRecord.score} / 100</span>
-                            </span>
-                          </div>
+                          {sessionRecord.status === SessionRecordStatus.FINISHED ? (
+                            <div className="w-40 space-x-2">
+                              <span className="mr-1">Score:</span>
+                              <span className="w-fit rounded-2xl bg-rose-50 px-2 py-1 font-semibold text-red-500">
+                                <span>{sessionRecord.score} / 100</span>
+                              </span>
+                            </div>
+                          ) : (
+                            <div className="w-28" />
+                          )}
                           <RetrySessionButton
                             id={sessionRecord.id}
                             disabled={!!user?.activeSessionRecordId}
@@ -90,9 +94,11 @@ export default function SessionsList({}: inferSSRProps<typeof getServerSideProps
                     </Button>
                   )}
                 </div>
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                  {status === "loading" || (isFetching && !isFetchingNextPage) ? <Loader /> : null}
-                </div>
+                {status === "loading" || (isFetching && !isFetchingNextPage) ? (
+                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                    <Loader size={LoaderSize.Five} />
+                  </div>
+                ) : null}
               </div>
             )}
           </div>
@@ -100,9 +106,4 @@ export default function SessionsList({}: inferSSRProps<typeof getServerSideProps
       </DashboardLayout>
     </>
   );
-}
-
-export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  const ssr = await ssrInit(ctx);
-  return { props: { trpcState: ssr.dehydrate() } };
 }

@@ -2,9 +2,10 @@ import { Menu, Transition } from "@headlessui/react";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { Fragment, type Dispatch, type SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
+import { Fragment } from "react";
 import { HiBars3BottomLeft } from "react-icons/hi2";
-import Logo from "~/assets/logo.png";
+import Logo from "~/assets/logo.webp";
 import LogoutIcon from "~/assets/logout-icon";
 import { Button, Loader } from "~/components/ui";
 import { classNames } from "~/lib/classNames";
@@ -88,7 +89,7 @@ export default function Header({
                       );
                     }
 
-                    if (!session?.user?.name || !session?.user?.email) {
+                    if (!session?.user?.email) {
                       return (
                         <Link href="/login">
                           <Button>Log In</Button>
@@ -107,7 +108,7 @@ export default function Header({
                       <Image
                         className="h-12 w-12 rounded-full"
                         src={avatar}
-                        alt={session.user.name}
+                        alt={session.user.name || "You"}
                         width={48}
                         height={48}
                       />

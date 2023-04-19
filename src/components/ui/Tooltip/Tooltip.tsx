@@ -13,16 +13,8 @@ import {
   useMergeRefs,
   useRole,
 } from "@floating-ui/react";
-import {
-  createContext,
-  forwardRef,
-  useContext,
-  useMemo,
-  useState,
-  type HTMLProps,
-  type ReactNode,
-  type Ref,
-} from "react";
+import type { HTMLProps, ReactNode, Ref } from "react";
+import { createContext, forwardRef, useContext, useMemo, useState } from "react";
 import { classNames } from "~/lib/classNames";
 
 export enum TooltipTheme {

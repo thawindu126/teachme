@@ -1,5 +1,4 @@
-import { createProxySSGHelpers } from "@trpc/react-query/ssg";
-import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
+import { createServerSideHelpers } from "@trpc/react-query/server";
 import type { GetServerSidePropsContext } from "next";
 import superjson from "superjson";
 import { appRouter } from "~/server/api/root";
@@ -12,10 +11,10 @@ import { prisma } from "~/server/db";
  * Automatically prefetches i18n based on the passed in `context`-object to prevent i18n-flickering.
  * Make sure to `return { props: { trpcState: ssr.dehydrate() } }` at the end.
  */
-export async function ssrInit(context: CreateNextContextOptions | GetServerSidePropsContext) {
+export async function ssrInit(context: GetServerSidePropsContext) {
   const { req, res } = context;
 
-  const ssr = createProxySSGHelpers({
+  const ssr = createServerSideHelpers({
     router: appRouter,
     transformer: superjson,
     ctx: {

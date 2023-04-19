@@ -1,6 +1,7 @@
 import { forwardRef, useMemo } from "react";
 import { HiExclamationCircle } from "react-icons/hi2";
-import TextareaAutosize, { type TextareaAutosizeProps } from "react-textarea-autosize";
+import type { TextareaAutosizeProps } from "react-textarea-autosize";
+import TextareaAutosize from "react-textarea-autosize";
 import { classNames } from "~/lib/classNames";
 
 import styles from "./TextArea.module.scss";

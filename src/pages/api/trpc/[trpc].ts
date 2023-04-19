@@ -6,6 +6,9 @@ import { createTRPCContext } from "~/server/api/trpc";
 // export API handler
 export default createNextApiHandler({
   router: appRouter,
+  /**
+   * @link https://trpc.io/docs/context
+   */
   createContext: createTRPCContext,
   onError:
     env.NODE_ENV === "development"
@@ -13,4 +16,10 @@ export default createNextApiHandler({
           console.error(`❌ tRPC failed on ${path ?? "<no-path>"}: ${error.message}`);
         }
       : undefined,
+  /**
+   * Enable query batching
+   */
+  batching: {
+    enabled: true,
+  },
 });

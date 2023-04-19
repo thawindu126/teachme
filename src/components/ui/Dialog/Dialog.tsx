@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { forwardRef, useState, type ComponentProps, type MouseEvent, type ReactNode } from "react";
 import Button from "~/components/ui/Button/Button";
 import { classNames } from "~/lib/classNames";
-import { type SVGComponent } from "~/types/SVGComponent";
+import type { SVGComponent } from "~/types/SVGComponent";
 
 interface DialogProps extends ComponentProps<(typeof DialogPrimitive)["Root"]> {
   name?: string;

@@ -14,7 +14,7 @@ export {
 } from "~/components/ui/Dialog/Dialog";
 export { default as ImageUploader } from "~/components/ui/ImageUploader/ImageUploader";
 export { default as Input, type InputProps } from "~/components/ui/Input/Input";
-export { default as Loader } from "~/components/ui/Loader/Loader";
+export { default as Loader, LoaderSize, LoaderColor } from "~/components/ui/Loader/Loader";
 export { default as MultiValueInput } from "~/components/ui/MultiValueInput/MultiValueInput";
 export { default as Select, type SelectItem, type SelectStateType } from "~/components/ui/Select/Select";
 export { default as TextArea } from "~/components/ui/TextArea/TextArea";

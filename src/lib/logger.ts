@@ -1,3 +1,4 @@
+import "@logtail/pino";
 import pino from "pino";
 
 const logger = pino(

@@ -1,11 +1,11 @@
 import { SessionRecordStatus } from "@prisma/client";
+import type { GetServerSidePropsContext } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { DashboardLayout } from "~/components";
-import { Loader } from "~/components/ui";
-import SessionConversation from "~/pages/dashboard/sessions/[id]/SessionConversation";
-import SessionStart from "~/pages/dashboard/sessions/[id]/SessionStart";
+import { DashboardLayout, SessionConversation, SessionStart } from "~/components";
+import { Loader, LoaderSize } from "~/components/ui";
+import { ssrInit } from "~/server/lib/ssr";
 import { api } from "~/utils/api";
 
 export default function Session() {
@@ -39,7 +39,7 @@ export default function Session() {
             return (
               <div className="relative h-full w-full">
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                  <Loader />
+                  <Loader size={LoaderSize.Five} />
                 </div>
               </div>
             );
@@ -54,4 +54,9 @@ export default function Session() {
       </DashboardLayout>
     </>
   );
+}
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const ssr = await ssrInit(ctx);
+  return { props: { trpcState: ssr.dehydrate() } };
 }

@@ -18,9 +18,9 @@ export default function StartSessionButton() {
           void createSessionRecord();
         }}
         loading={createSessionRecordInProgress}
-        className="h-48 w-48 active:scale-95"
+        className="h-48 w-48 hover:bg-gray-50 active:scale-95 active:bg-gray-100"
       />
-      <div className="mt-3 text-xl font-medium tracking-wider text-red-500 ">Start Session</div>
+      <div className="mt-3 text-xl font-medium tracking-wider text-red-500">Start Session</div>
     </div>
   );
 }

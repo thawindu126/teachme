@@ -1,5 +1,6 @@
-import { type VariantProps, cva } from "class-variance-authority";
-import { type DetailedHTMLProps, type InputHTMLAttributes } from "react";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
+import type { DetailedHTMLProps, InputHTMLAttributes } from "react";
 import { HiExclamationCircle } from "react-icons/hi2";
 import { classNames } from "~/lib/classNames";
 

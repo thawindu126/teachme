@@ -1,10 +1,10 @@
 import { NextSeo } from "next-seo";
 import Image from "next/image";
 import { HiCalendarDays } from "react-icons/hi2";
-import BackgroundPatternTransparent from "~/assets/background-pattern-transparent.png";
+import BackgroundPatternTransparent from "~/assets/background-pattern-transparent.webp";
 import StarIcon from "~/assets/star.png";
 import { Avatar, BackButton, DashboardLayout } from "~/components";
-import { Loader, Tooltip } from "~/components/ui";
+import { Loader, LoaderSize, Tooltip } from "~/components/ui";
 import { defaultAvatarSrc } from "~/lib/defaultAvatarImage";
 import { api } from "~/utils/api";
 
@@ -28,7 +28,9 @@ export default function Profile() {
             }}
           />
           {!user || isUserLoading ? (
-            <Loader />
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+              <Loader className="text-primary-900" size={LoaderSize.Five} />
+            </div>
           ) : (
             <>
               <div className="relative z-10 mx-auto flex h-[calc(100%-2rem)] max-w-xl flex-auto flex-col items-center space-y-6 rounded-b-3xl bg-white px-8 pb-24 pt-8 shadow">

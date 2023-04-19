@@ -15,7 +15,6 @@ export default function SessionRecordsPreviewsList() {
     status,
   } = api.sessionRecords.list.useInfiniteQuery(
     {
-      status: SessionRecordStatus.FINISHED,
       limit: 10,
     },
     { getNextPageParam: (lastPage) => lastPage.nextCursor }
@@ -24,14 +23,17 @@ export default function SessionRecordsPreviewsList() {
   return status === "error" ? (
     <p>Error: {error.message}</p>
   ) : (
-    <div className="relative mt-2 flex flex-auto flex-col items-center">
+    <div className="relative mt-2 flex h-96 flex-auto flex-col items-center overflow-hidden">
+      {sessionRecords?.pages?.[0]?.items.length === 0 && (
+        <span className="self-start">No sessions to show</span>
+      )}
       {sessionRecords?.pages.map(({ items: sessionRecords }, i) => (
-        <ul className="w-full flex-auto space-y-2" key={i}>
+        <ul className="w-full flex-auto space-y-2 overflow-auto" key={i}>
           {sessionRecords.map((sessionRecord) => (
             <li key={sessionRecord.id}>
               <Link
                 href={`/dashboard/sessions/${sessionRecord.id}/summary`}
-                className="flex items-center justify-between space-x-2 rounded-lg bg-white py-4 pl-6 pr-8 text-sm shadow hover:bg-gray-50 active:bg-gray-100">
+                className="grid grid-cols-2 items-center rounded-lg bg-white py-4 pl-6 pr-8 text-sm shadow hover:bg-gray-50 active:bg-gray-100">
                 <div className="space-y-1">
                   <div className="space-x-2">
                     <span>Title:</span>
@@ -46,11 +48,15 @@ export default function SessionRecordsPreviewsList() {
                     </span>
                   </div>
                 </div>
-                <div className="space-x-2">
-                  <SessionRecordStatusBadge status={sessionRecord.status} size="sm" />
-                </div>
-                <div className="rounded-2xl bg-red-50 px-2 py-1 font-semibold text-red-500">
-                  <span>{sessionRecord.score}/100</span>
+                <div className="inline-flex items-center justify-between">
+                  <span className="space-x-2">
+                    <SessionRecordStatusBadge status={sessionRecord.status} size="sm" />
+                  </span>
+                  {sessionRecord.status === SessionRecordStatus.FINISHED && (
+                    <span className="h-fit w-24 rounded-2xl bg-rose-50 px-2 py-1 text-center font-semibold text-red-500">
+                      <span>{sessionRecord.score} / 100</span>
+                    </span>
+                  )}
                 </div>
               </Link>
             </li>

@@ -1,26 +1,14 @@
-import {
-  type SessionRecordAnswer,
-  type SessionRecordQuestion,
-  SessionRecordStatus,
-  type User,
-} from "@prisma/client";
+import type { SessionRecordAnswer, SessionRecordQuestion, User } from "@prisma/client";
+import { SessionRecordStatus } from "@prisma/client";
 import Link from "next/link";
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type ChangeEvent,
-  type FormEventHandler,
-} from "react";
-import BackgroundPatternTransparent from "~/assets/background-pattern-transparent.png";
-import Logo from "~/assets/logo.png";
+import type { ChangeEvent, FormEventHandler } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import BackgroundPatternTransparent from "~/assets/background-pattern-transparent.webp";
+import Logo from "~/assets/logo.webp";
 import SendIcon from "~/assets/send-icon";
 import { Avatar, BackButton } from "~/components";
 import SpeechRecognitionMic from "~/components/SpeechRecognitionMic";
-import { Button, Loader, TextArea } from "~/components/ui";
-import { LoaderSize } from "~/components/ui/Loader/Loader";
+import { Button, Loader, LoaderSize, TextArea } from "~/components/ui";
 import { classNames } from "~/lib/classNames";
 import { api } from "~/utils/api";
 
@@ -38,6 +26,13 @@ export default function SessionConversation({ id, status }: SessionConversationP
   } = api.sessionRecords.get.useQuery({ id });
   const { mutate: answerQuestion, isLoading: answerQuestionInProgress } =
     api.sessionRecords.answerQuestion.useMutation({
+      onSuccess() {
+        setAnswerInput("");
+        void refetchSessionRecord();
+      },
+    });
+  const { mutate: endSessionRecord, isLoading: endSessionRecordInProgress } =
+    api.sessionRecords.end.useMutation({
       onSuccess() {
         setAnswerInput("");
         void refetchSessionRecord();
@@ -93,8 +88,15 @@ export default function SessionConversation({ id, status }: SessionConversationP
       style={{ backgroundImage: `url(${BackgroundPatternTransparent.src})` }}>
       <BackButton />
       <div className="mx-8 flex flex-auto flex-col items-center overflow-hidden pt-8">
-        <div className="mx-8 mb-4 self-start">
+        <div className="mb-4 flex w-full items-center justify-between self-start px-8">
           <span className="text-3xl underline decoration-primary-500">{sessionRecord?.topic || ""}</span>
+          <Button
+            onClick={() => {
+              void endSessionRecord({ id });
+            }}
+            loading={endSessionRecordInProgress}>
+            End Session
+          </Button>
         </div>
         <div className="relative flex w-full flex-auto overflow-hidden rounded-b-sm rounded-t-3xl bg-gray-50 bg-opacity-80 shadow">
           <ul ref={messagesListRef} className="w-full space-y-6 overflow-y-auto overflow-x-hidden px-4 py-8">
@@ -128,7 +130,7 @@ export default function SessionConversation({ id, status }: SessionConversationP
             value={answerInput}
             onChange={onAnswerInputChange}
             placeholder={
-              status === SessionRecordStatus.FINISHED ? "This session is finished" : "Type your answer here"
+              status === SessionRecordStatus.FINISHED ? "This session has ended." : "Type your answer here"
             }
             minRows={3}
             maxRows={6}
@@ -175,23 +177,25 @@ function MessageBlock({
       {answer && (
         <div className="flex space-x-2.5">
           {userAvatar}
-          <div className="w-1/2 max-w-sm space-y-1 divide-y rounded-t-2xl rounded-bl-2xl bg-white px-6 py-3 shadow">
+          <div className="w-1/2 max-w-sm space-y-1 divide-y rounded-t-2xl rounded-br-2xl bg-white px-6 py-3 shadow">
             <p className="text-gray-700">
               {expanded ? answer.payload : `${answer.payload.slice(0, 100)}...`}
             </p>
-            <div>
-              <label
-                htmlFor={`sessionRecord.${answer.id}`}
-                className="cursor-pointer text-xs hover:underline">
-                {expanded ? "See Less" : "See All"}
-              </label>
-              <input
-                id={`sessionRecord.${answer.id}`}
-                type="checkbox"
-                className="opacity-0"
-                onChange={(event) => setExpanded(event.currentTarget.checked)}
-              />
-            </div>
+            {answer.payload.length > 100 && (
+              <div>
+                <label
+                  htmlFor={`sessionRecord.${answer.id}`}
+                  className="cursor-pointer text-xs hover:underline">
+                  {expanded ? "See Less" : "See All"}
+                </label>
+                <input
+                  id={`sessionRecord.${answer.id}`}
+                  type="checkbox"
+                  className="opacity-0"
+                  onChange={(event) => setExpanded(event.currentTarget.checked)}
+                />
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -1,15 +1,14 @@
-import { type GetServerSidePropsContext } from "next";
+import type { GetServerSidePropsContext } from "next";
 import { NextSeo } from "next-seo";
 import Image from "next/image";
 import Link from "next/link";
-import Logo from "~/assets/logo.png";
-import { AuthLayout } from "~/components";
+import Logo from "~/assets/logo.webp";
+import { AuthLayout, SignUpForm } from "~/components";
 import { Button } from "~/components/ui";
 import { IS_GOOGLE_LOGIN_ENABLED } from "~/lib/constants";
-import SignUpForm from "~/pages/signup/SignUpForm";
 import { getServerAuthSession } from "~/server/auth";
 import { ssrInit } from "~/server/lib/ssr";
-import { type inferSSRProps } from "~/types/inferSSRProps";
+import type { inferSSRProps } from "~/types/inferSSRProps";
 
 export default function SignUp({ isGoogleLoginEnabled }: inferSSRProps<typeof getServerSideProps>) {
   return (

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useMemo } from "react";
 import { Avatar } from "~/components";
 import { Loader } from "~/components/ui";
@@ -42,8 +43,10 @@ export default function UserProfile() {
   }, [isLoading, user?.avatar, user?.level, user?.name, user?.points, user?.pointsOfNextLevel]);
 
   return (
-    <div className="flex h-min w-full items-center justify-around space-x-4 rounded-2xl bg-gray-50 px-2 py-6 shadow">
-      {content}
-    </div>
+    <Link href="/dashboard/profile">
+      <div className="flex h-min w-full max-w-2xl items-center justify-around space-x-4 rounded-2xl bg-white px-2 py-6 shadow hover:bg-gray-50 active:bg-gray-100">
+        {content}
+      </div>
+    </Link>
   );
 }
