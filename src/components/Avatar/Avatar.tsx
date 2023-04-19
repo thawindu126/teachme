@@ -1,7 +1,6 @@
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import type { Maybe } from "@trpc/server";
-import { useEffect, useRef, useState } from "react";
-import { Loader } from "~/components/ui";
+import { useState } from "react";
 import { classNames } from "~/lib/classNames";
 import { UserLevel } from "~/server/lib/user-level";
 

@@ -1,6 +1,7 @@
 import { Disclosure } from "@headlessui/react";
 import { SessionRecordStatus } from "@prisma/client";
 import { type GetServerSidePropsContext } from "next";
+import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { HiChevronDown } from "react-icons/hi2";
@@ -34,98 +35,103 @@ export default function SessionSummary({}: inferSSRProps<typeof getServerSidePro
   }, [sessionRecord]);
 
   return (
-    <DashboardLayout>
-      <div
-        className={classNames(
-          "flex h-full flex-col space-y-4 bg-white bg-opacity-25 bg-cover bg-center bg-no-repeat px-4 pt-6 bg-blend-color",
-          styles.container
-        )}
-        style={{ backgroundImage: `url(${BackgroundPatternTransparent.src})` }}>
-        <BackButton />
-        <div className="mx-8 flex flex-auto flex-col items-center space-y-4 overflow-hidden pt-8">
-          <div className="mb-4 flex w-full justify-between self-start px-8">
-            <span className="text-3xl underline decoration-primary-500">Session Summary</span>
-            <RetrySessionButton id={id as string} size="sm" disabled={!!user?.activeSessionRecordId} />
-          </div>
-          {!sessionRecord || sessionRecordLoading ? (
-            <Loader />
-          ) : (
-            <div className="relative flex w-full flex-auto flex-col overflow-hidden rounded-b-sm rounded-t-3xl bg-gray-50 bg-opacity-80 shadow">
-              <div className="border-b-2 border-b-primary-500 bg-white px-4 py-2.5 shadow">
-                <div className="flex w-2/3 items-center justify-between">
-                  <div className="space-y-2 py-2.5 pl-6 pr-8 text-sm">
-                    <div className="space-x-2.5">
-                      <span>Title:</span>
-                      <span className="font-semibold">{sessionRecord.topic}</span>
+    <>
+      <NextSeo title={`${sessionRecord?.topic || "Untitled"} - Summary | TeachMe`} />
+      <DashboardLayout>
+        <div
+          className={classNames(
+            "flex h-full flex-col space-y-4 bg-white bg-opacity-25 bg-cover bg-center bg-no-repeat px-4 pt-6 bg-blend-color",
+            styles.container
+          )}
+          style={{ backgroundImage: `url(${BackgroundPatternTransparent.src})` }}>
+          <BackButton />
+          <div className="mx-8 flex flex-auto flex-col items-center space-y-4 overflow-hidden pt-8">
+            <div className="mb-4 flex w-full justify-between self-start px-8">
+              <span className="text-3xl underline decoration-primary-500">Session Summary</span>
+              <RetrySessionButton id={id as string} size="sm" disabled={!!user?.activeSessionRecordId} />
+            </div>
+            {!sessionRecord || sessionRecordLoading ? (
+              <Loader />
+            ) : (
+              <div className="relative flex w-full flex-auto flex-col overflow-hidden rounded-b-sm rounded-t-3xl bg-gray-50 bg-opacity-80 shadow">
+                <div className="border-b-2 border-b-primary-500 bg-white px-4 py-2.5 shadow">
+                  <div className="flex w-2/3 items-center justify-between">
+                    <div className="space-y-2 py-2.5 pl-6 pr-8 text-sm">
+                      <div className="space-x-2.5">
+                        <span>Title:</span>
+                        <span className="font-semibold">{sessionRecord.topic}</span>
+                      </div>
+                      <div className="space-x-2.5 text-gray-500">
+                        <span>Date:</span>
+                        <span className="font-semibold">
+                          {sessionRecord.createdAt.toLocaleString("en-UK", {
+                            dateStyle: "short",
+                          })}
+                        </span>
+                      </div>
                     </div>
-                    <div className="space-x-2.5 text-gray-500">
-                      <span>Date:</span>
-                      <span className="font-semibold">
-                        {sessionRecord.createdAt.toLocaleString("en-UK", {
-                          dateStyle: "short",
-                        })}
+                    <div className="space-x-2">
+                      <span>Score:</span>
+                      <span className="w-fit rounded-2xl bg-red-50 px-2 py-1 font-semibold text-red-500">
+                        <span>{sessionRecord.score} / 100</span>
                       </span>
                     </div>
                   </div>
-                  <div className="space-x-2">
-                    <span>Score:</span>
-                    <span className="w-fit rounded-2xl bg-red-50 px-2 py-1 font-semibold text-red-500">
-                      <span>{sessionRecord.score} / 100</span>
-                    </span>
-                  </div>
                 </div>
-              </div>
-              <ul className="space-y-4 overflow-y-auto px-10 py-6">
-                {questionsAndAnswers.map(({ question, answer }, index) => {
-                  if (!answer) {
-                    return null;
-                  }
-                  return (
-                    <li key={question.id}>
-                      <Disclosure>
-                        <>
-                          <Disclosure.Button
-                            className="flex w-full items-center space-x-6 border-b border-b-gray-300 py-4"
-                            disabled={!answer}>
-                            <div className="relative">
-                              <QuestionBubbleIcon className="relative z-0 h-8 w-8" aria-hidden="true" />
-                              <span className="absolute left-1/2 top-3 z-10 -translate-x-1/2 -translate-y-1/2 text-sm text-white">
-                                {index + 1}
-                              </span>
-                            </div>
-                            <div className="flex items-center space-x-2.5 text-left">
-                              <span className="flex flex-1 items-center space-x-2.5">{question.payload}</span>
-                              <HiChevronDown
-                                className="h-4 w-4 transition-transform ui-open:rotate-180"
-                                aria-hidden="true"
-                              />
-                            </div>
-                          </Disclosure.Button>
+                <ul className="space-y-4 overflow-y-auto px-10 py-6">
+                  {questionsAndAnswers.map(({ question, answer }, index) => {
+                    if (!answer) {
+                      return null;
+                    }
+                    return (
+                      <li key={question.id}>
+                        <Disclosure>
+                          <>
+                            <Disclosure.Button
+                              className="flex w-full items-center space-x-6 border-b border-b-gray-300 py-4"
+                              disabled={!answer}>
+                              <div className="relative">
+                                <QuestionBubbleIcon className="relative z-0 h-8 w-8" aria-hidden="true" />
+                                <span className="absolute left-1/2 top-3 z-10 -translate-x-1/2 -translate-y-1/2 text-sm text-white">
+                                  {index + 1}
+                                </span>
+                              </div>
+                              <div className="flex items-center space-x-2.5 text-left">
+                                <span className="flex flex-1 items-center space-x-2.5">
+                                  {question.payload}
+                                </span>
+                                <HiChevronDown
+                                  className="h-4 w-4 transition-transform ui-open:rotate-180"
+                                  aria-hidden="true"
+                                />
+                              </div>
+                            </Disclosure.Button>
 
-                          <Disclosure.Panel className="mt-2 space-y-6">
-                            <div className="space-y-2">
-                              <span>Your response:</span>
-                              <p className="text-sm">{answer.payload}</p>
-                            </div>
-                            <div className="space-y-2">
-                              <span className="flex items-center space-x-2.5">
-                                <span>Review:</span>
-                                <AnswerGrade grade={answer.grade} />
-                              </span>
-                              <p className="text-sm">{answer.review}</p>
-                            </div>
-                          </Disclosure.Panel>
-                        </>
-                      </Disclosure>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          )}
+                            <Disclosure.Panel className="mt-2 space-y-6">
+                              <div className="space-y-2">
+                                <span>Your response:</span>
+                                <p className="text-sm">{answer.payload}</p>
+                              </div>
+                              <div className="space-y-2">
+                                <span className="flex items-center space-x-2.5">
+                                  <span>Review:</span>
+                                  <AnswerGrade grade={answer.grade} />
+                                </span>
+                                <p className="text-sm">{answer.review}</p>
+                              </div>
+                            </Disclosure.Panel>
+                          </>
+                        </Disclosure>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    </DashboardLayout>
+      </DashboardLayout>
+    </>
   );
 }
 

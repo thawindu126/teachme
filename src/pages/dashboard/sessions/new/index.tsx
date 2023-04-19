@@ -1,4 +1,5 @@
 import { type GetServerSidePropsContext } from "next";
+import { NextSeo } from "next-seo";
 import { DashboardLayout, StartSessionButton } from "~/components";
 import { getServerAuthSession } from "~/server/auth";
 import { prisma } from "~/server/db";
@@ -7,9 +8,12 @@ import { type inferSSRProps } from "~/types/inferSSRProps";
 
 export default function NewSession({}: inferSSRProps<typeof getServerSideProps>) {
   return (
-    <DashboardLayout>
-      <StartSessionButton />
-    </DashboardLayout>
+    <>
+      <NextSeo title="New Session | TeachMe" />
+      <DashboardLayout>
+        <StartSessionButton />
+      </DashboardLayout>
+    </>
   );
 }
 

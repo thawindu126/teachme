@@ -1,4 +1,5 @@
 import { SessionRecordStatus } from "@prisma/client";
+import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { DashboardLayout } from "~/components";
@@ -11,7 +12,7 @@ export default function Session() {
   const router = useRouter();
   const { id } = router.query;
   const [sessionRecordStatus, setSessionRecordStatus] = useState<SessionRecordStatus | null>(null);
-  api.sessionRecords.get.useQuery(
+  const { data: sessionRecord } = api.sessionRecords.get.useQuery(
     { id: id as string },
     {
       enabled: !!id,
@@ -26,28 +27,31 @@ export default function Session() {
   );
 
   return (
-    <DashboardLayout>
-      {(() => {
-        if (!id || Array.isArray(id)) {
-          return null;
-        }
+    <>
+      <NextSeo title={`${sessionRecord?.topic || "New"} - Sessions | TeachMe`} />
+      <DashboardLayout>
+        {(() => {
+          if (!id || Array.isArray(id)) {
+            return null;
+          }
 
-        if (!sessionRecordStatus) {
-          return (
-            <div className="relative h-full w-full">
-              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                <Loader />
+          if (!sessionRecordStatus) {
+            return (
+              <div className="relative h-full w-full">
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                  <Loader />
+                </div>
               </div>
-            </div>
-          );
-        }
+            );
+          }
 
-        if (sessionRecordStatus === SessionRecordStatus.PENDING) {
-          return <SessionStart id={id} setSessionRecordStatus={setSessionRecordStatus} />;
-        }
+          if (sessionRecordStatus === SessionRecordStatus.PENDING) {
+            return <SessionStart id={id} setSessionRecordStatus={setSessionRecordStatus} />;
+          }
 
-        return <SessionConversation id={id} status={sessionRecordStatus} />;
-      })()}
-    </DashboardLayout>
+          return <SessionConversation id={id} status={sessionRecordStatus} />;
+        })()}
+      </DashboardLayout>
+    </>
   );
 }
