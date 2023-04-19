@@ -23,6 +23,7 @@ interface Props<T> {
   className?: string;
   wrapperClassName?: string;
   labelClassName?: string;
+  optionsListClassName?: string;
 }
 
 export default function Select<T extends string>({
@@ -34,6 +35,7 @@ export default function Select<T extends string>({
   className,
   wrapperClassName,
   labelClassName,
+  optionsListClassName,
 }: Props<T>) {
   const [selected, setSelected] = useMemo(() => state, [state]);
 
@@ -56,7 +58,7 @@ export default function Select<T extends string>({
             {label}
           </Listbox.Label>
         )}
-        <Listbox.Button className="relative w-full cursor-default border-b border-gray-500 bg-white pl-4 pr-10 text-left shadow-sm focus:border-primary-500 focus:outline-none sm:text-sm">
+        <Listbox.Button className="relative w-full cursor-default border-b border-gray-500 bg-white pl-4 pr-10 text-left shadow-sm focus:outline-none sm:text-sm">
           <span className={classNames("block truncate text-gray-900", className)} title={getTitle(selected)}>
             {getTitle(selected) ?? <span className={styles.placeholder}>{placeholder}</span>}
           </span>
@@ -70,7 +72,11 @@ export default function Select<T extends string>({
           leave="transition ease-in duration-100"
           leaveFrom="opacity-100"
           leaveTo="opacity-0">
-          <Listbox.Options className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+          <Listbox.Options
+            className={classNames(
+              "absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm",
+              optionsListClassName
+            )}>
             {items.map((item) => (
               <SelectOption key={item.id} item={item} title={item.title ?? item.name} />
             ))}

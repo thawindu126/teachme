@@ -1,14 +1,15 @@
 import { Disclosure } from "@headlessui/react";
-import { SessionRecordAnswerGrade, SessionRecordStatus } from "@prisma/client";
+import { SessionRecordStatus } from "@prisma/client";
 import { type GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { HiChevronDown } from "react-icons/hi2";
 import BackgroundPatternTransparent from "~/assets/background-pattern-transparent.png";
 import QuestionBubbleIcon from "~/assets/question-bubble-icon";
-import { BackButton, DashboardLayout } from "~/components";
-import { Button, Loader } from "~/components/ui";
+import { BackButton, DashboardLayout, RetrySessionButton } from "~/components";
+import { Loader } from "~/components/ui";
 import { classNames } from "~/lib/classNames";
+import AnswerGrade from "~/pages/dashboard/sessions/[id]/summary/AnswerGrade";
 import { prisma } from "~/server/db";
 import { ssrInit } from "~/server/lib/ssr";
 import { type inferSSRProps } from "~/types/inferSSRProps";
@@ -19,15 +20,10 @@ import styles from "./SessionSummary.module.scss";
 export default function SessionSummary({}: inferSSRProps<typeof getServerSideProps>) {
   const router = useRouter();
   const { id } = router.query;
+  const { data: user } = api.me.useQuery();
   const { data: sessionRecord, isLoading: sessionRecordLoading } = api.sessionRecords.get.useQuery({
     id: id as string,
   });
-  const { mutate: retrySessionRecord, isLoading: retrySessionRecordInProgress } =
-    api.sessionRecords.retry.useMutation({
-      onSuccess(data) {
-        void router.push(`/dashboard/sessions/${data.id}`);
-      },
-    });
   const questionsAndAnswers = useMemo(() => {
     if (!sessionRecord || sessionRecord.currentQuestionIndex == null) {
       return [];
@@ -36,10 +32,6 @@ export default function SessionSummary({}: inferSSRProps<typeof getServerSidePro
     const questions = sessionRecord.questions.slice(0, sessionRecord.currentQuestionIndex + 1);
     return questions.map((question, index) => ({ question, answer: sessionRecord.answers[index] }));
   }, [sessionRecord]);
-
-  const onClickRetry = useCallback(() => {
-    retrySessionRecord({ id: id as string });
-  }, [id, retrySessionRecord]);
 
   return (
     <DashboardLayout>
@@ -53,13 +45,7 @@ export default function SessionSummary({}: inferSSRProps<typeof getServerSidePro
         <div className="mx-8 flex flex-auto flex-col items-center space-y-4 overflow-hidden pt-8">
           <div className="mb-4 flex w-full justify-between self-start px-8">
             <span className="text-3xl underline decoration-primary-500">Session Summary</span>
-            <Button
-              size="sm"
-              onClick={onClickRetry}
-              className="shadow"
-              loading={!retrySessionRecordInProgress}>
-              Retry session
-            </Button>
+            <RetrySessionButton id={id as string} size="sm" disabled={!!user?.activeSessionRecordId} />
           </div>
           {!sessionRecord || sessionRecordLoading ? (
             <Loader />
@@ -161,23 +147,4 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   }
 
   return { props: { trpcState: ssr.dehydrate() } };
-}
-
-function AnswerGrade({ grade, className }: { grade: SessionRecordAnswerGrade; className?: string }) {
-  return (
-    <span
-      className={classNames(
-        "relative h-8 w-8 rounded-full text-white shadow",
-        {
-          "bg-green-600": grade === SessionRecordAnswerGrade.A,
-          "bg-emerald-600 saturate-50": grade === SessionRecordAnswerGrade.B,
-          "bg-lime-600 saturate-50": grade === SessionRecordAnswerGrade.C,
-          "bg-yellow-600": grade === SessionRecordAnswerGrade.D,
-          "bg-red-600 saturate-50": grade === SessionRecordAnswerGrade.F,
-        },
-        className
-      )}>
-      <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">{grade}</span>
-    </span>
-  );
 }

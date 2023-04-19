@@ -127,6 +127,7 @@ async function getUserFromSession(session: Maybe<Session>) {
       points: true,
       activeSessionRecordId: true,
       identityProvider: true,
+      createdAt: true,
     },
   });
 

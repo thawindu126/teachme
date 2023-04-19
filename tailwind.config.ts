@@ -4,6 +4,9 @@ export default {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        serif: "Noto Sans",
+      },
       colors: {
         primary: {
           100: "#fee2e2",
@@ -16,6 +19,9 @@ export default {
         tertiary: "#EDE9E9",
         light: "#FFFFFF",
         dark: "#2B2A2A",
+      },
+      animation: {
+        "fade-in-up": "fade-in-up 0.35s cubic-bezier(.21,1.02,.73,1)",
       },
       keyframes: {
         "checkbox-wave": {

@@ -1,31 +1,40 @@
+import type { Placement } from "@floating-ui/react";
 import {
-  autoPlacement,
+  FloatingPortal,
   autoUpdate,
+  flip,
   offset,
-  type Placement,
-  safePolygon,
+  shift,
   useDismiss,
   useFloating,
   useFocus,
   useHover,
   useInteractions,
+  useMergeRefs,
   useRole,
 } from "@floating-ui/react";
-import { cloneElement, type FunctionComponentElement, useMemo, useState } from "react";
-import { mergeRefs } from "react-merge-refs";
+import {
+  createContext,
+  forwardRef,
+  useContext,
+  useMemo,
+  useState,
+  type HTMLProps,
+  type ReactNode,
+  type Ref,
+} from "react";
 import { classNames } from "~/lib/classNames";
-
-import styles from "./Tooltip.module.css";
 
 export enum TooltipTheme {
   Light,
   Dark,
 }
 
-interface TooltipProps {
-  content: string | JSX.Element;
+interface TooltipOptions {
+  initialOpen?: boolean;
   placement?: Placement;
-  children: FunctionComponentElement<JSX.Element>;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   delay?:
     | number
     | Partial<{
@@ -33,70 +42,142 @@ interface TooltipProps {
         close: number;
       }>;
   interactive?: boolean;
+}
+
+export function useTooltip({
+  initialOpen = false,
+  placement = "top",
+  open: controlledOpen,
+  onOpenChange: setControlledOpen,
+  delay,
+}: TooltipOptions = {}) {
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(initialOpen);
+
+  const open = controlledOpen ?? uncontrolledOpen;
+  const setOpen = setControlledOpen ?? setUncontrolledOpen;
+
+  const data = useFloating({
+    placement,
+    open,
+    onOpenChange: setOpen,
+    whileElementsMounted: autoUpdate,
+    middleware: [
+      offset(5),
+      flip({
+        fallbackAxisSideDirection: "start",
+      }),
+      shift({ padding: 5 }),
+    ],
+  });
+
+  const context = data.context;
+
+  const hover = useHover(context, {
+    move: false,
+    enabled: controlledOpen == null,
+    delay,
+  });
+  const focus = useFocus(context, {
+    enabled: controlledOpen == null,
+  });
+  const dismiss = useDismiss(context);
+  const role = useRole(context, { role: "tooltip" });
+
+  const interactions = useInteractions([hover, focus, dismiss, role]);
+
+  return useMemo(
+    () => ({
+      open,
+      setOpen,
+      ...interactions,
+      ...data,
+    }),
+    [open, setOpen, interactions, data]
+  );
+}
+
+type ContextType = ReturnType<typeof useTooltip> | null;
+
+const TooltipContext = createContext<ContextType>(null);
+
+const useTooltipContext = () => {
+  const context = useContext(TooltipContext);
+
+  if (context == null) {
+    throw new Error("Tooltip components must be wrapped in <Tooltip />");
+  }
+
+  return context;
+};
+
+interface TooltipProps extends TooltipOptions {
+  children: ReactNode & { ref?: Ref<HTMLElement> };
+  content: ReactNode;
   theme?: TooltipTheme;
 }
 
-export default function Tooltip({
-  children,
-  content,
-  placement,
-  delay,
-  interactive = false,
-  theme = TooltipTheme.Light,
-}: TooltipProps) {
-  const [open, setOpen] = useState(false);
-
-  const { x, y, reference, floating, strategy, context } = useFloating({
-    ...(placement && { placement }),
-    open,
-    onOpenChange: setOpen,
-    middleware: [offset(2), ...(!placement ? [autoPlacement()] : [])],
-    whileElementsMounted: autoUpdate,
-  });
-
-  const { getReferenceProps, getFloatingProps } = useInteractions([
-    useHover(context, {
-      delay: delay ?? {
-        open: 0,
-        close: 100,
-      },
-      ...(interactive && { handleClose: safePolygon() }),
-    }),
-    useFocus(context),
-    useRole(context, { role: "tooltip" }),
-    useDismiss(context),
-  ]);
-
-  // Preserve the consumer's ref
-  const ref = useMemo(
-    () => (children.ref ? mergeRefs([reference, children.ref]) : reference),
-    [reference, children]
-  );
-
+export default function Tooltip({ children, content, theme, ...options }: TooltipProps) {
+  // This can accept any props as options, e.g. `placement`,
+  // or other positioning options.
+  const tooltip = useTooltip(options);
   return (
-    <>
-      {cloneElement(children, getReferenceProps({ ref, ...children.props }))}
-      {open && (
-        <div
-          ref={floating}
-          className={classNames(
-            "pointer-events-none rounded-md px-2 py-1 text-sm shadow",
-            {
-              "bg-white text-gray-700": theme === TooltipTheme.Light,
-              "bg-gray-700 text-white": theme === TooltipTheme.Dark,
-            },
-            styles["container"]
-          )}
-          style={{
-            position: strategy,
-            top: y ?? 0,
-            left: x ?? 0,
-            zIndex: 10,
-          }}
-          {...getFloatingProps()}>
-          {content}
-        </div>
-      )}
-    </>
+    <TooltipContext.Provider value={tooltip}>
+      <TooltipTrigger>{children}</TooltipTrigger>
+      <TooltipContent theme={theme}>{content}</TooltipContent>
+    </TooltipContext.Provider>
   );
 }
+
+interface TooltipTriggerProps extends Omit<HTMLProps<HTMLElement>, "children"> {
+  children: ReactNode & { ref?: Ref<HTMLElement> };
+}
+
+const TooltipTrigger = forwardRef<HTMLElement, TooltipTriggerProps>(function TooltipTrigger(
+  { children, ...props },
+  propRef
+) {
+  const context = useTooltipContext();
+  const ref = useMergeRefs([context.refs.setReference, propRef, ...(children?.ref ? [children?.ref] : [])]);
+  return (
+    <div
+      ref={ref}
+      // The user can style the trigger based on the state
+      data-state={context.open ? "open" : "closed"}
+      {...context.getReferenceProps(props)}>
+      {children}
+    </div>
+  );
+});
+
+interface TooltipContentProps extends HTMLProps<HTMLDivElement> {
+  theme?: TooltipTheme;
+}
+
+const TooltipContent = forwardRef<HTMLDivElement, TooltipContentProps>(function TooltipContent(
+  { theme = TooltipTheme.Dark, ...props },
+  propRef
+) {
+  const context = useTooltipContext();
+  const ref = useMergeRefs([context.refs.setFloating, propRef]);
+
+  if (!context.open) return null;
+
+  return (
+    <FloatingPortal>
+      <div
+        ref={ref}
+        className={classNames("pointer-events-none z-50 rounded-md px-2 py-1 text-sm shadow", {
+          "bg-white text-gray-700": theme === TooltipTheme.Light,
+          "bg-gray-700 text-white": theme === TooltipTheme.Dark,
+        })}
+        style={{
+          position: context.strategy,
+          top: context.y ?? 0,
+          left: context.x ?? 0,
+          ...props.style,
+        }}
+        {...context.getFloatingProps(props)}
+      />
+    </FloatingPortal>
+  );
+});

@@ -5,5 +5,7 @@ export { default as DashboardLayout } from "~/components/DashboardLayout/Dashboa
 export { default as GoogleAuthButton } from "~/components/GoogleAuthButton/GoogleAuthButton";
 export { default as Header } from "~/components/Header/Header";
 export { default as Providers } from "~/components/Providers/Providers";
+export { default as RetrySessionButton } from "~/components/RetrySessionButton/RetrySessionButton";
+export { default as SessionRecordStatusBadge } from "~/components/SessionRecordStatusBadge/SessionRecordStatusBadge";
 export { default as StartSessionButton } from "~/components/StartSessionRecordButton/StartSessionRecordButton";
 export { default as ThemeToggle } from "~/components/ThemeToggle/ThemeToggle";

@@ -34,10 +34,10 @@ export function getLevel(points: number): UserLevel {
   return UserLevel.FIVE;
 }
 
-export function getPointsToNextLevel(points: number, level = getLevel(points)) {
+export function getPointsOfNextLevel(points: number, level = getLevel(points)) {
   if (level === UserLevel.FIVE) {
     return 0;
   }
 
-  return LEVEL_DIVIDERS[(level + 1) as UserLevel] - points;
+  return LEVEL_DIVIDERS[(level + 1) as UserLevel];
 }

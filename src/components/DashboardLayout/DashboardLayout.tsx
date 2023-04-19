@@ -4,6 +4,7 @@ import { signOut, useSession } from "next-auth/react";
 import { type StaticImageData } from "next/image";
 import { useRouter } from "next/router";
 import { Fragment, useCallback, useEffect, useMemo, useState, type ReactNode, type SVGProps } from "react";
+import { Toaster } from "react-hot-toast";
 import { HiXMark } from "react-icons/hi2";
 import AchievementsIcon from "~/assets/achievements.png";
 import ChaptersIcon from "~/assets/chapters-icon";
@@ -16,6 +17,7 @@ import { Header } from "~/components";
 import SidebarButton from "~/components/DashboardLayout/SidebarButton";
 import { Tooltip, TooltipTheme } from "~/components/ui";
 import { classNames } from "~/lib/classNames";
+import matchPath from "~/lib/matchPath";
 import { api } from "~/utils/api";
 
 function useRedirectToLoginIfUnauthenticated() {
@@ -73,22 +75,9 @@ export default function DashboardLayout({ children, headerContent, className }: 
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    console.log("from DashboardLayout()");
-  }, []);
-
   const isActive = useCallback(
-    (path: string, exact = false) => {
-      const split = router.pathname.split("/").filter((str) => str.trim());
-      if (exact) {
-        return split.length === 1 && split?.[0] === path;
-      }
-
-      if (split.length === 1 && split[0] === path) {
-        return true;
-      }
-      const index = split.indexOf(path);
-      return index === -1 || index === 0 ? false : true;
+    (pattern: string) => {
+      return !!matchPath(pattern, router.pathname);
     },
     [router.pathname]
   );
@@ -99,37 +88,37 @@ export default function DashboardLayout({ children, headerContent, className }: 
         name: "Dashboard",
         href: "/dashboard",
         icon: DashboardIcon,
-        current: isActive("dashboard", true),
+        current: isActive("/dashboard"),
       },
       {
         name: "New session",
         href: `/dashboard/sessions/${user?.activeSessionRecordId || "new"}`,
         icon: SessionsIcon,
-        current: isActive("sessions"),
+        current: isActive("/dashboard/sessions/:id/*"),
       },
       {
         name: "Session records",
         href: "/dashboard/sessions",
         icon: SessionRecordsIcon,
-        current: isActive("session-records"),
+        current: isActive("/dashboard/sessions"),
       },
       {
         name: "Chapters",
         href: "/dashboard/chapters",
         icon: ChaptersIcon,
-        current: isActive("chapters"),
+        current: isActive("/dashboard/chapters"),
       },
       {
         name: "Achievements",
         href: "/dashboard/achievements",
         icon: AchievementsIcon,
-        current: isActive("achievements"),
+        current: isActive("/dashboard/achievements"),
       },
       {
         name: "Settings",
         href: "/dashboard/profile/settings",
         icon: SettingsIcon,
-        current: isActive("settings"),
+        current: isActive("/dashboard/profile/settings"),
       },
     ],
     [isActive, user?.activeSessionRecordId]
@@ -296,6 +285,11 @@ export default function DashboardLayout({ children, headerContent, className }: 
         {/* Main content */}
         {children}
       </main>
+
+      {/* Toasts */}
+      <div>
+        <Toaster position="bottom-right" />
+      </div>
     </div>
   );
 }

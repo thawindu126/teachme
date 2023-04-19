@@ -15,6 +15,10 @@ const userNavigation = [
     href: "/dashboard/profile",
   },
   {
+    name: "Settings",
+    href: "/dashboard/profile/settings",
+  },
+  {
     name: "Sign out",
     onClick: () => {
       void signOut();
@@ -42,7 +46,7 @@ export default function Header({
 
   return (
     <header className={classNames("h-16 w-full", className)}>
-      <div className="relative z-10 flex h-16 flex-shrink-0 border-b border-gray-200 bg-white shadow-sm">
+      <div className="relative z-50 flex h-16 flex-shrink-0 border-b border-gray-200 bg-white shadow-sm">
         {showMobileMenu && (
           <button
             type="button"
@@ -69,7 +73,7 @@ export default function Header({
             )}>
             {/* <Notifications /> */}
             {/* Profile dropdown */}
-            <Menu as="div" className="relative z-10 flex-shrink-0">
+            <Menu as="div" className="relative z-50 flex-shrink-0">
               <div>
                 <Menu.Button
                   as="div"
@@ -122,26 +126,34 @@ export default function Header({
                 <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   {userNavigation.map((item) => (
                     <Menu.Item key={item.name}>
-                      {({ active }) => (
-                        <button
-                          onClick={item.onClick}
-                          className={classNames(
-                            active ? "bg-gray-100" : "",
-                            "block w-full rounded-md px-4 py-2 text-left text-sm text-gray-700"
-                          )}>
-                          <div className="flex items-center gap-2">
-                            {(() => {
-                              if (!item.icon) {
-                                return null;
-                              }
+                      {({ active }) => {
+                        const element = (
+                          <button
+                            onClick={item.onClick}
+                            className={classNames(
+                              active ? "bg-gray-100" : "",
+                              "block w-full rounded-md px-4 py-2 text-left text-sm text-gray-700"
+                            )}>
+                            <div className="flex items-center gap-2">
+                              {(() => {
+                                if (!item.icon) {
+                                  return null;
+                                }
 
-                              const { icon: Icon } = item;
-                              return <Icon className="h-5 w-5" aria-hidden="true" />;
-                            })()}
-                            {item.name}
-                          </div>
-                        </button>
-                      )}
+                                const { icon: Icon } = item;
+                                return <Icon className="h-5 w-5" aria-hidden="true" />;
+                              })()}
+                              {item.name}
+                            </div>
+                          </button>
+                        );
+
+                        if (item.href) {
+                          return <Link href={item.href}>{element}</Link>;
+                        }
+
+                        return element;
+                      }}
                     </Menu.Item>
                   ))}
                 </Menu.Items>

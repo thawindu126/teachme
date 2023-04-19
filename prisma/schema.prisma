@@ -71,7 +71,7 @@ enum IdentityProvider {
 model User {
     id                           String                        @id @default(auto()) @map("_id") @db.ObjectId
     name                         String?
-    email                        String?                       @unique
+    email                        String                        @unique
     emailVerified                DateTime?
     password                     String?
     status                       UserStatus                    @default(PENDING)

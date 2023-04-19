@@ -3,7 +3,7 @@ import { authRouter } from "~/server/api/routers/auth";
 import { profileRouter } from "~/server/api/routers/profile";
 import { sessionRecordsRouter } from "~/server/api/routers/session-records";
 import { createTRPCRouter, mergeRouters, protectedProcedure } from "~/server/api/trpc";
-import { getLevel, getPointsToNextLevel } from "~/server/lib/user-level";
+import { getLevel, getPointsOfNextLevel } from "~/server/lib/user-level";
 
 const loggedInViewerRouter = createTRPCRouter({
   me: protectedProcedure
@@ -24,7 +24,7 @@ const loggedInViewerRouter = createTRPCRouter({
       const { highestEducationalExperience, interestedTopics, points, ...user } = ctx.user;
 
       const level = getLevel(points);
-      const pointsToNextLevel = getPointsToNextLevel(points, level);
+      const pointsOfNextLevel = getPointsOfNextLevel(points, level);
 
       return {
         ...user,
@@ -34,7 +34,7 @@ const loggedInViewerRouter = createTRPCRouter({
         ...(select?.interestedTopics && { interestedTopics }),
         points,
         level,
-        pointsToNextLevel,
+        pointsOfNextLevel,
       };
     }),
 });

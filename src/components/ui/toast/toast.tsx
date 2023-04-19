@@ -1,59 +1,83 @@
 import hotToast from "react-hot-toast";
+import { FiCheck, FiInfo } from "react-icons/fi";
 import { classNames } from "~/lib/classNames";
 
-export { Toaster } from "react-hot-toast";
-
-interface ToastProps extends React.HTMLAttributes<HTMLDivElement> {
-  visible: boolean;
-}
-
-function Toast({ visible, className, ...props }: ToastProps) {
-  return (
-    <div
-      className={classNames(
-        "min-h-16 mb-2 flex w-[350px] flex-col items-start gap-1 rounded-md bg-white px-6 py-4 shadow-lg",
-        visible && "animate-in slide-in-from-bottom-5",
-        className
-      )}
-      {...props}
-    />
-  );
-}
-
-type ToastTitleProps = React.HTMLAttributes<HTMLHeadingElement>;
-
-Toast.Title = function ToastTitle({ className, ...props }: ToastTitleProps) {
-  return <p className={classNames("text-sm font-medium", className)} {...props} />;
-};
-
-type ToastDescriptionProps = React.HTMLAttributes<HTMLParagraphElement>;
-
-Toast.Description = function ToastDescription({ className, ...props }: ToastDescriptionProps) {
-  return <p className={classNames("text-sm opacity-80", className)} {...props} />;
-};
-
-interface ToastOpts {
-  title?: string;
+type IToast = {
   message: string;
-  type?: "success" | "error" | "default";
-  duration?: number;
-}
+  toastVisible: boolean;
+};
 
-export default function toast(opts: ToastOpts) {
-  const { title, message, type = "default", duration = 3000 } = opts;
+export const SuccessToast = ({ message, toastVisible }: IToast) => (
+  <div
+    className={classNames(
+      "mb-2 flex h-auto items-center space-x-2 rounded-md bg-white p-3 text-sm font-semibold text-primary-700 shadow-md rtl:space-x-reverse md:max-w-sm",
+      toastVisible && "animate-fade-in-up"
+    )}>
+    <span>
+      <FiCheck className="h-4 w-4" />
+    </span>
+    <p data-testid="toast-success">{message}</p>
+  </div>
+);
 
-  return hotToast.custom(
-    ({ visible }) => (
-      <Toast
-        visible={visible}
-        className={classNames({
-          "bg-red-600 text-white": type === "error",
-          "bg-black text-white": type === "success",
-        })}>
-        <Toast.Title>{title}</Toast.Title>
-        {message && <Toast.Description>{message}</Toast.Description>}
-      </Toast>
-    ),
-    { duration }
-  );
+export const ErrorToast = ({ message, toastVisible }: IToast) => (
+  <div
+    className={classNames(
+      "mb-2 flex h-auto animate-fade-in-up items-center space-x-2 rounded-md bg-red-50 p-3 text-sm font-semibold text-red-800 shadow-md rtl:space-x-reverse md:max-w-sm",
+      toastVisible && "animate-fade-in-up"
+    )}>
+    <span>
+      <FiInfo className="h-4 w-4" />
+    </span>
+    <p data-testid="toast-error">{message}</p>
+  </div>
+);
+
+export const WarningToast = ({ message, toastVisible }: IToast) => (
+  <div
+    className={classNames(
+      "mb-2 flex h-auto animate-fade-in-up items-center space-x-2 rounded-md bg-gray-700 p-3 text-sm font-semibold text-white shadow-md rtl:space-x-reverse md:max-w-sm",
+      toastVisible && "animate-fade-in-up"
+    )}>
+    <span>
+      <FiInfo className="h-4 w-4" />
+    </span>
+    <p data-testid="toast-warning">{message}</p>
+  </div>
+);
+
+export const DefaultToast = ({ message, toastVisible }: IToast) => (
+  <div
+    className={classNames(
+      "mb-2 flex h-auto animate-fade-in-up items-center space-x-2 rounded-md bg-gray-700 p-3 text-sm font-semibold text-white shadow-md rtl:space-x-reverse md:max-w-sm",
+      toastVisible && "animate-fade-in-up"
+    )}>
+    <span>
+      <FiCheck className="h-4 w-4" />
+    </span>
+    <p>{message}</p>
+  </div>
+);
+
+const TOAST_VISIBLE_DURATION = 6000;
+
+export default function toast(
+  message: string,
+  variant: "success" | "warning" | "error",
+  duration = TOAST_VISIBLE_DURATION
+) {
+  switch (variant) {
+    case "success":
+      hotToast.custom((t) => <SuccessToast message={message} toastVisible={t.visible} />, { duration });
+      break;
+    case "error":
+      hotToast.custom((t) => <ErrorToast message={message} toastVisible={t.visible} />, { duration });
+      break;
+    case "warning":
+      hotToast.custom((t) => <WarningToast message={message} toastVisible={t.visible} />, { duration });
+      break;
+    default:
+      hotToast.custom((t) => <DefaultToast message={message} toastVisible={t.visible} />, { duration });
+      break;
+  }
 }

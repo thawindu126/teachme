@@ -94,7 +94,7 @@ export default function SessionConversation({ id, status }: SessionConversationP
       <BackButton />
       <div className="mx-8 flex flex-auto flex-col items-center overflow-hidden pt-8">
         <div className="mx-8 mb-4 self-start">
-          <span className="text-3xl underline decoration-primary-500">Photosynthesis</span>
+          <span className="text-3xl underline decoration-primary-500">{sessionRecord?.topic || ""}</span>
         </div>
         <div className="relative flex w-full flex-auto overflow-hidden rounded-b-sm rounded-t-3xl bg-gray-50 bg-opacity-80 shadow">
           <ul ref={messagesListRef} className="w-full space-y-6 overflow-y-auto overflow-x-hidden px-4 py-8">

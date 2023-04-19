@@ -25,7 +25,7 @@ export default function UserProfile() {
           levelDetails={{
             points: user.points,
             level: user.level,
-            pointsToNextLevel: user.pointsToNextLevel,
+            pointsOfNextLevel: user.pointsOfNextLevel,
           }}
         />
 
@@ -39,7 +39,7 @@ export default function UserProfile() {
         <span className={classNames("flex flex-row")}>No achievements unlocked</span>
       </>
     );
-  }, [isLoading, user?.avatar, user?.level, user?.name, user?.points, user?.pointsToNextLevel]);
+  }, [isLoading, user?.avatar, user?.level, user?.name, user?.points, user?.pointsOfNextLevel]);
 
   return (
     <div className="flex h-min w-full items-center justify-around space-x-4 rounded-2xl bg-gray-50 px-2 py-6 shadow">

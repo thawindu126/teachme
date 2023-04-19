@@ -36,9 +36,9 @@ export const sessionRecordsRouter = createTRPCRouter({
   list: protectedProcedure
     .input(
       z.object({
-        status: z.enum(
-          Object.values(SessionRecordStatus) as [SessionRecordStatusType, ...SessionRecordStatusType[]]
-        ),
+        status: z
+          .enum(Object.values(SessionRecordStatus) as [SessionRecordStatusType, ...SessionRecordStatusType[]])
+          .nullish(),
         limit: z.number().min(1).max(100).nullish(),
         cursor: z.string().nullish(),
       })
