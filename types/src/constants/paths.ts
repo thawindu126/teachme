@@ -14,6 +14,8 @@ export enum Path {
   SESSION_RECORDS = '/session-records',
 
   CHAPTERS = '/chapters',
+  PROFILE = '/profile',
+  SUBSCRIPTION = '/subscription',
 
   ACHIEVEMENTS = '/achievements',
 

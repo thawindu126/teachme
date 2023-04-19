@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import Profile from './profile';
+import Achievements from './achievements';
 
-describe('Profile', () => {
+describe('Achievements', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Profile />);
+    const { baseElement } = render(<Achievements />);
     expect(baseElement).toBeTruthy();
   });
 });
