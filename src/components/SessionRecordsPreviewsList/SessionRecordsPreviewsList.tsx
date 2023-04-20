@@ -2,6 +2,7 @@ import { SessionRecordStatus } from "@prisma/client";
 import Link from "next/link";
 import { SessionRecordStatusBadge } from "~/components";
 import { Button, Loader } from "~/components/ui";
+import { roundNumber } from "~/lib/roundNumber";
 import { api } from "~/utils/api";
 
 export default function SessionRecordsPreviewsList() {
@@ -54,7 +55,7 @@ export default function SessionRecordsPreviewsList() {
                   </span>
                   {sessionRecord.status === SessionRecordStatus.FINISHED && (
                     <span className="h-fit w-24 rounded-2xl bg-rose-50 px-2 py-1 text-center font-semibold text-red-500">
-                      <span>{sessionRecord.score} / 100</span>
+                      <span>{roundNumber(sessionRecord.score)} / 100</span>
                     </span>
                   )}
                 </div>

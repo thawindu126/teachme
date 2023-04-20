@@ -10,6 +10,7 @@ import QuestionBubbleIcon from "~/assets/question-bubble-icon";
 import { BackButton, DashboardLayout, RetrySessionButton, SessionRecordAnswerGradeBadge } from "~/components";
 import { Loader, LoaderSize } from "~/components/ui";
 import { classNames } from "~/lib/classNames";
+import { roundNumber } from "~/lib/roundNumber";
 import { prisma } from "~/server/db";
 import { ssrInit } from "~/server/lib/ssr";
 import type { inferSSRProps } from "~/types/inferSSRProps";
@@ -71,7 +72,7 @@ export default function SessionSummary({}: inferSSRProps<typeof getServerSidePro
                     <div className="space-x-2">
                       <span>Score:</span>
                       <span className="w-fit rounded-2xl bg-rose-50 px-2 py-1 font-semibold text-red-500">
-                        <span>{sessionRecord.score} / 100</span>
+                        <span>{roundNumber(sessionRecord.score)} / 100</span>
                       </span>
                     </div>
                   </div>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import BackgroundPatternTransparent from "~/assets/background-pattern-transparent.webp";
 import { BackButton, DashboardLayout, RetrySessionButton, SessionRecordStatusBadge } from "~/components";
 import { Button, Loader, LoaderSize } from "~/components/ui";
+import { roundNumber } from "~/lib/roundNumber";
 import { api } from "~/utils/api";
 
 export default function SessionsList() {
@@ -72,7 +73,7 @@ export default function SessionsList() {
                             <div className="w-40 space-x-2">
                               <span className="mr-1">Score:</span>
                               <span className="w-fit rounded-2xl bg-rose-50 px-2 py-1 font-semibold text-red-500">
-                                <span>{sessionRecord.score} / 100</span>
+                                <span>{roundNumber(sessionRecord.score)} / 100</span>
                               </span>
                             </div>
                           ) : (
