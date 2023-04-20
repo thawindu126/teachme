@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import type { Session } from "next-auth";
 import { getSession } from "next-auth/react";
 import { DefaultSeo } from "next-seo";
@@ -14,6 +15,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
         description="TeachMe fosters continuous improvement by offering a distinctive and engaging approach to learning based on the Feynman technique. Its fundamental principle is to explain a subject or idea in simple terms to comprehend it truly."
       />
       <Component {...pageProps} />
+      <Analytics />
     </Providers>
   );
 };
