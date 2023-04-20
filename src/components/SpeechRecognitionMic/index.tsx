@@ -9,14 +9,22 @@ interface SpeechRecognitionProps {
 }
 
 export default function SpeechRecognitionMic({ setValue }: SpeechRecognitionProps) {
-  const { transcript, listening } = useSpeechRecognition();
+  const { transcript, listening, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
   useEffect(() => {
+    if (browserSupportsSpeechRecognition) {
+      return;
+    }
+
     const appId = process.env.SPEECHLY_APP_ID;
     if (appId) {
       const SpeechlySpeechRecognition = createSpeechlySpeechRecognition(appId);
       SpeechRecognition.applyPolyfill(SpeechlySpeechRecognition);
     }
+  }, [browserSupportsSpeechRecognition]);
+
+  useEffect(() => {
+    void SpeechRecognition.stopListening();
   }, []);
 
   useEffect(() => {

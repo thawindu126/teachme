@@ -22,7 +22,7 @@ export default function Dashboard({}: inferSSRProps<typeof getServerSideProps>) 
               <section className="my-8 flex flex-auto items-center justify-center">
                 <StartSessionButton />
               </section>
-              <section className="-pl-12 hidden max-w-3xl rounded-tr-3xl bg-white px-8 py-4 text-xl shadow lg:block">
+              <section className="-ml-12 hidden max-w-3xl rounded-tr-3xl bg-white px-8 py-4 text-xl shadow lg:block">
                 “If you can&apos;t explain it <span className="text-red-500">simply</span>, you don&apos;t
                 understand it well enough”
               </section>

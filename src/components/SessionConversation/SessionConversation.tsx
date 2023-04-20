@@ -87,8 +87,8 @@ export default function SessionConversation({ id, status }: SessionConversationP
       className="flex h-full flex-col space-y-4 bg-white bg-opacity-25 bg-cover bg-center bg-no-repeat px-4 pt-6 bg-blend-color"
       style={{ backgroundImage: `url(${BackgroundPatternTransparent.src})` }}>
       <BackButton />
-      <div className="mx-8 flex flex-auto flex-col items-center overflow-hidden pt-8">
-        <div className="mb-4 flex w-full items-center justify-between self-start px-8">
+      <div className="mx-8 flex flex-auto flex-col items-center space-y-6 overflow-hidden pt-8">
+        <div className="flex w-full items-center justify-between self-start px-8">
           <span className="text-3xl underline decoration-primary-500">{sessionRecord?.topic || ""}</span>
           <Button
             onClick={() => {

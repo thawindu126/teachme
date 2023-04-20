@@ -1,6 +1,7 @@
 export { default as AuthLayout } from "~/components/AuthLayout/AuthLayout";
 export { default as Avatar } from "~/components/Avatar/Avatar";
 export { default as BackButton } from "~/components/BackButton/BackButton";
+export { default as ComingSoonOverlay } from "~/components/ComingSoonOverlay/ComingSoonOverlay";
 export { default as DashboardLayout } from "~/components/DashboardLayout/DashboardLayout";
 export { default as GoogleAuthButton } from "~/components/GoogleAuthButton/GoogleAuthButton";
 export { default as Header } from "~/components/Header/Header";

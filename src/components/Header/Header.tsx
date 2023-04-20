@@ -78,7 +78,7 @@ export default function Header({
               <div>
                 <Menu.Button
                   as="div"
-                  className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+                  className="flex rounded-full bg-white text-sm hover:shadow hover:ring-2 hover:ring-primary-500 hover:ring-offset-2 focus:outline-none">
                   <span className="sr-only">Open user menu</span>
                   {(() => {
                     if (status === "loading") {

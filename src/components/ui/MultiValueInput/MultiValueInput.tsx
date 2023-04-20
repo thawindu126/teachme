@@ -42,14 +42,13 @@ export default function MultiValueInput({
   };
 
   const onInputKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
-    if (event.key !== ",") {
+    if (event.key !== "," && event.key !== "Enter") {
       return;
     }
     event.preventDefault();
 
     const trimmed = valueOnInputField.trim();
-
-    if (values.includes(trimmed)) {
+    if (!trimmed || values.includes(trimmed)) {
       return;
     }
 
